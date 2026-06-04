@@ -44,17 +44,19 @@ export default function ProfileScreen() {
                 value={name}
                 onChangeText={setName}
               />
-              <Text>Loaded {areas.length} areas</Text>
-              <Picker
-                selectedValue={location}
-                onValueChange={(itemValue) => setLocation(itemValue)}
-              >
-                <Picker.Item label="Select your London area" value="" />
 
-                {areas.map((area, index) => (
-                  <Picker.Item key={index} label={area} value={area} />
-                ))}
-              </Picker>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  selectedValue={location}
+                  onValueChange={(itemValue) => setLocation(itemValue)}
+                >
+                  <Picker.Item label="Select your London area" value="" />
+
+                  {areas.map((area, index) => (
+                    <Picker.Item key={index} label={area} value={area} />
+                  ))}
+                </Picker>
+              </View>
             </>
           ) : (
             <>
@@ -108,19 +110,27 @@ const styles = StyleSheet.create({
     borderBottomColor: "#6F6C43",
     paddingBottom: 5,
     marginBottom: 10,
-    color: "#000",
+    color: "#6F6C43",
   },
 
   name: {
     fontSize: 30,
     fontWeight: "bold",
-    color: "#000",
+    color: "#6F6C43",
   },
 
   location: {
     fontSize: 18,
-    color: "#666",
+    color: "#6F6C43",
     marginTop: 5,
+  },
+  pickerContainer: {
+    backgroundColor: "#fffcf2",
+    borderWidth: 2,
+    borderColor: "#6F6C43",
+    borderRadius: 12,
+    overflow: "hidden",
+    marginTop: 10,
   },
 
   button: {
