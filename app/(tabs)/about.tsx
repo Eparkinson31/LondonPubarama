@@ -18,7 +18,7 @@ export default function AboutScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#dae8ff",
+    backgroundColor: "#daffeb",
     justifyContent: "center",
     alignItems: "center",
   },
