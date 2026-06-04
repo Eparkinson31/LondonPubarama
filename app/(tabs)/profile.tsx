@@ -1,4 +1,5 @@
 import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
@@ -8,15 +9,25 @@ export default function ProfileScreen() {
   const [location, setLocation] = useState("");
   const [isEditing, setIsEditing] = useState(true);
   const [areas, setAreas] = useState<string[]>([]);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  const pickImageAsync = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/location")
       .then((response) => response.json())
       .then((data) => {
         console.log("DATA:", data);
-        console.log("TYPE:", typeof data);
-        console.log("LENGTH:", data.length);
-
         setAreas(data);
       })
       .catch((error) => {
@@ -24,15 +35,19 @@ export default function ProfileScreen() {
       });
   }, []);
 
-  <Text>Areas loaded: {areas.length}</Text>;
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image
-          source={require("../../assets/profile.jpg")}
-          style={styles.profilePic}
-        />
+        <Pressable onPress={pickImageAsync}>
+          <Image
+            source={
+              profileImage
+                ? { uri: profileImage }
+                : require("../../assets/profile.jpg")
+            }
+            style={styles.profilePic}
+          />
+        </Pressable>
 
         <View style={styles.infoContainer}>
           {isEditing ? (
@@ -48,7 +63,7 @@ export default function ProfileScreen() {
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={location}
-                  onValueChange={(itemValue) => setLocation(itemValue)}
+                  onValueChange={(itemValue: string) => setLocation(itemValue)}
                 >
                   <Picker.Item label="Select your London area" value="" />
 
@@ -124,6 +139,7 @@ const styles = StyleSheet.create({
     color: "#6F6C43",
     marginTop: 5,
   },
+
   pickerContainer: {
     backgroundColor: "#fffcf2",
     borderWidth: 2,
