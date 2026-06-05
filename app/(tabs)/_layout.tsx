@@ -1,50 +1,53 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Tabs } from "expo-router";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function TabLayout() {
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: "#b03924",
-        headerStyle: {
-          backgroundColor: "#fffcf2",
-        },
-        headerShadowVisible: false,
-        headerTintColor: "#b03924",
-        tabBarStyle: {
-          backgroundColor: "#fffcf2",
-        },
-      }}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="home-outline" color="#6F6C43" size={24} />
-          ),
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: "#b03924",
+          headerStyle: {
+            backgroundColor: "#fffcf2",
+          },
+          headerShadowVisible: false,
+          headerTintColor: "#b03924",
+          tabBarStyle: {
+            backgroundColor: "#fffcf2",
+          },
         }}
-      />
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: "Home",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="home-outline" color={color} size={size} />
+            ),
+          }}
+        />
 
-      <Tabs.Screen
-        name="about"
-        options={{
-          title: "About",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="heart-outline" color="#6F6C43" size={24} />
-          ),
-        }}
-      />
+        <Tabs.Screen
+          name="about"
+          options={{
+            title: "About",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="heart-outline" color={color} size={size} />
+            ),
+          }}
+        />
 
-      <Tabs.Screen
-        name="profile"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="person-outline" color="#6F6C43" size={24} />
-          ),
-        }}
-      />
-    </Tabs>
+        <Tabs.Screen
+          name="profile"
+          options={{
+            title: "Profile",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person-outline" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tabs>
+    </GestureHandlerRootView>
   );
 }

@@ -22,32 +22,42 @@ export default function ProfileScreen() {
       setProfileImage(result.assets[0].uri);
     }
   };
-
+  // useEffect hook to fetch the list of London areas from the backend server when the component
+  // mounts and stores it in the areas state variable, which is then used to populate the Picker
+  // component for selecting a location in the profile screen.
   useEffect(() => {
     fetch("http://127.0.0.1:5000/location")
       .then((response) => response.json())
       .then((data) => {
-        console.log("DATA:", data);
         setAreas(data);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
-
+  // Defines the profile screen where users can edit their name, select their location from a
+  // list of London areas fetched from the backend server, and upload a profile picture from their image library.
+  // The screen includes an edit button that toggles between editing and viewing modes, allowing users to save their
+  // changes to the profile.
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Pressable onPress={pickImageAsync}>
-          <Image
-            source={
-              profileImage
-                ? { uri: profileImage }
-                : require("../../assets/profile.jpg")
-            }
-            style={styles.profilePic}
-          />
-        </Pressable>
+        <View style={styles.profilePicContainer}>
+          <Pressable onPress={pickImageAsync}>
+            <Image
+              source={
+                profileImage
+                  ? { uri: profileImage }
+                  : require("../../assets/profile.jpg")
+              }
+              style={styles.profilePic}
+            />
+          </Pressable>
+
+          <Pressable style={styles.editPhotoButton} onPress={pickImageAsync}>
+            <Text style={styles.editPhotoText}>+</Text>
+          </Pressable>
+        </View>
 
         <View style={styles.infoContainer}>
           {isEditing ? (
@@ -63,7 +73,7 @@ export default function ProfileScreen() {
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={location}
-                  onValueChange={(itemValue: string) => setLocation(itemValue)}
+                  onValueChange={(itemValue) => setLocation(String(itemValue))}
                 >
                   <Picker.Item label="Select your London area" value="" />
 
@@ -107,11 +117,34 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
+  profilePicContainer: {
+    position: "relative",
+    marginRight: 20,
+  },
+
   profilePic: {
     width: 120,
     height: 120,
     borderRadius: 60,
-    marginRight: 20,
+  },
+
+  editPhotoButton: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: "#6F6C43",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 2,
+    borderColor: "#fffcf2",
+  },
+
+  editPhotoText: {
+    fontSize: 14,
+    color: "#fffcf2",
   },
 
   infoContainer: {
