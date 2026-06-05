@@ -1,15 +1,67 @@
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+    Image,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
 export default function ProfileScreen() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [areas, setAreas] = useState<string[]>([]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
+
+  const preferences = [
+    "Traditional Pub",
+    "Craft Beer",
+    "Real Ale",
+    "IPA",
+    "Lager",
+    "Cider",
+    "Alcohol Free Beer",
+    "Guiness",
+    "Pimms",
+    "Aperol Spritz",
+    "Sunday Roast",
+    "Burgers",
+    "Vegan Options",
+    "Vegetarian Options",
+    "Sunday Roast",
+    "Pub Quiz",
+    "Live Music",
+    "Sports Screening",
+    "Fish and Chips",
+    "Open Mic Night",
+    "DJ Nights",
+    "Pool Table",
+    "Darts",
+    "Board Games",
+    "Karaoke",
+    "Dog Friendly",
+    "Family Friendly",
+    "Historic Pub",
+    "Riverside",
+    "Beer Garden",
+    "Rooftop",
+    "Cosy",
+    "Quiet",
+    "Lively",
+    "Late Night",
+    "Outdoor Seating",
+    "Good for Groups",
+    "Local Favourite",
+    "Tourist Friendly",
+    "Wheelchair Accessible",
+  ];
 
   const pickImageAsync = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -22,9 +74,17 @@ export default function ProfileScreen() {
       setProfileImage(result.assets[0].uri);
     }
   };
-  // useEffect hook to fetch the list of London areas from the backend server when the component
-  // mounts and stores it in the areas state variable, which is then used to populate the Picker
-  // component for selecting a location in the profile screen.
+
+  const togglePreference = (preference: string) => {
+    if (selectedPreferences.includes(preference)) {
+      setSelectedPreferences(
+        selectedPreferences.filter((item) => item !== preference),
+      );
+    } else {
+      setSelectedPreferences([...selectedPreferences, preference]);
+    }
+  };
+
   useEffect(() => {
     fetch("http://127.0.0.1:5000/location")
       .then((response) => response.json())
@@ -35,12 +95,12 @@ export default function ProfileScreen() {
         console.error(error);
       });
   }, []);
-  // Defines the profile screen where users can edit their name, select their location from a
-  // list of London areas fetched from the backend server, and upload a profile picture from their image library.
-  // The screen includes an edit button that toggles between editing and viewing modes, allowing users to save their
-  // changes to the profile.
+
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ paddingBottom: 50 }}
+    >
       <View style={styles.header}>
         <View style={styles.profilePicContainer}>
           <Pressable onPress={pickImageAsync}>
@@ -95,12 +155,56 @@ export default function ProfileScreen() {
         </View>
       </View>
 
+      <View style={styles.preferencesContainer}>
+        <Text style={styles.sectionTitle}>Preferences</Text>
+
+        {isEditing ? (
+          <View style={styles.chipsContainer}>
+            {preferences.map((preference) => (
+              <Pressable
+                key={preference}
+                onPress={() => togglePreference(preference)}
+                style={[
+                  styles.preferenceChip,
+                  selectedPreferences.includes(preference) &&
+                    styles.selectedPreferenceChip,
+                ]}
+              >
+                <Text
+                  style={[
+                    styles.preferenceText,
+                    selectedPreferences.includes(preference) &&
+                      styles.selectedPreferenceText,
+                  ]}
+                >
+                  {preference}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+        ) : (
+          <View style={styles.chipsContainer}>
+            {selectedPreferences.length > 0 ? (
+              selectedPreferences.map((preference) => (
+                <View key={preference} style={styles.selectedPreferenceChip}>
+                  <Text style={styles.selectedPreferenceText}>
+                    {preference}
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text style={styles.location}>No preferences selected</Text>
+            )}
+          </View>
+        )}
+      </View>
+
       <Pressable style={styles.button} onPress={() => setIsEditing(!isEditing)}>
         <Text style={styles.buttonText}>
           {isEditing ? "Save Profile" : "Edit Profile"}
         </Text>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -135,7 +239,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#6F6C43",
+    backgroundColor: "#bdcfd3",
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 2,
@@ -143,8 +247,9 @@ const styles = StyleSheet.create({
   },
 
   editPhotoText: {
-    fontSize: 14,
+    fontSize: 18,
     color: "#fffcf2",
+    fontWeight: "bold",
   },
 
   infoContainer: {
@@ -180,6 +285,47 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     marginTop: 10,
+  },
+
+  preferencesContainer: {
+    marginTop: 30,
+  },
+
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    color: "#6F6C43",
+    marginBottom: 12,
+  },
+
+  chipsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+
+  preferenceChip: {
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    margin: 4,
+  },
+
+  selectedPreferenceChip: {
+    backgroundColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    margin: 4,
+  },
+
+  preferenceText: {
+    color: "#6F6C43",
+  },
+
+  selectedPreferenceText: {
+    color: "#fffcf2",
   },
 
   button: {
