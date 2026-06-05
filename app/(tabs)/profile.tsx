@@ -35,7 +35,6 @@ export default function ProfileScreen() {
     "Burgers",
     "Vegan Options",
     "Vegetarian Options",
-    "Sunday Roast",
     "Pub Quiz",
     "Live Music",
     "Sports Screening",
@@ -45,6 +44,7 @@ export default function ProfileScreen() {
     "Pool Table",
     "Darts",
     "Board Games",
+    "Fireplace",
     "Karaoke",
     "Dog Friendly",
     "Family Friendly",
@@ -57,12 +57,9 @@ export default function ProfileScreen() {
     "Lively",
     "Late Night",
     "Outdoor Seating",
-    "Good for Groups",
-    "Local Favourite",
-    "Tourist Friendly",
     "Wheelchair Accessible",
   ];
-
+  // List of preferences for users to select from when editing their profile//
   const pickImageAsync = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
@@ -84,7 +81,8 @@ export default function ProfileScreen() {
       setSelectedPreferences([...selectedPreferences, preference]);
     }
   };
-
+  // UseEffect hook fetches the list of London areas from the backend API when the component mounts and stores
+  // it in the areas state variable, which is then used to populate the location picker in the profile editing form.
   useEffect(() => {
     fetch("http://127.0.0.1:5000/location")
       .then((response) => response.json())
@@ -154,7 +152,11 @@ export default function ProfileScreen() {
           )}
         </View>
       </View>
-
+      {/* Displays the preferences section of the profile, showing either editable chips
+        for selecting preferences or static chips displaying the selected preferences, 
+        depending on whether the user is in editing mode or not. The togglePreference 
+        function is used to add or remove preferences from the selectedPreferences state 
+        when a chip is pressed. */}
       <View style={styles.preferencesContainer}>
         <Text style={styles.sectionTitle}>Preferences</Text>
 
