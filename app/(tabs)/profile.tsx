@@ -106,7 +106,7 @@ export default function ProfileScreen() {
               source={
                 profileImage
                   ? { uri: profileImage }
-                  : require("../../assets/profile.jpg")
+                  : require("../../assets/profilepicillustration.jpg")
               }
               style={styles.profilePic}
             />
@@ -201,7 +201,10 @@ export default function ProfileScreen() {
         )}
       </View>
 
-      <Pressable style={styles.button} onPress={() => setIsEditing(!isEditing)}>
+      <Pressable
+        style={styles.editprofilebutton}
+        onPress={() => setIsEditing(!isEditing)}
+      >
         <Text style={styles.buttonText}>
           {isEditing ? "Save Profile" : "Edit Profile"}
         </Text>
@@ -330,9 +333,9 @@ const styles = StyleSheet.create({
     color: "#fffcf2",
   },
 
-  button: {
-    marginTop: 30,
-    backgroundColor: "#6F6C43",
+  editprofilebutton: {
+    marginTop: 10,
+    backgroundColor: "#bdcfd3",
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 8,
