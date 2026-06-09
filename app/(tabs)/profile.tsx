@@ -2,12 +2,12 @@ import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
 import {
-    Image,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
@@ -18,9 +18,11 @@ export default function ProfileScreen() {
   const [areas, setAreas] = useState<string[]>([]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
-  const [selectedPreferences, setSelectedPreferences] = useState<string[]>([]);
+  const [selectedPubPreferences, setSelectedPubPreferences] = useState<
+    string[]
+  >([]);
 
-  const preferences = [
+  const pubPreferences = [
     "Traditional Pub",
     "Craft Beer",
     "Real Ale",
@@ -72,13 +74,13 @@ export default function ProfileScreen() {
     }
   };
 
-  const togglePreference = (preference: string) => {
-    if (selectedPreferences.includes(preference)) {
-      setSelectedPreferences(
-        selectedPreferences.filter((item) => item !== preference),
+  const togglePubPreference = (pubpreference: string) => {
+    if (selectedPubPreferences.includes(pubpreference)) {
+      setSelectedPubPreferences(
+        selectedPubPreferences.filter((item) => item !== pubpreference),
       );
     } else {
-      setSelectedPreferences([...selectedPreferences, preference]);
+      setSelectedPubPreferences([...selectedPubPreferences, pubpreference]);
     }
   };
   // UseEffect hook fetches the list of London areas from the backend API when the component mounts and stores
@@ -162,35 +164,35 @@ export default function ProfileScreen() {
 
         {isEditing ? (
           <View style={styles.chipsContainer}>
-            {preferences.map((preference) => (
+            {pubPreferences.map((pubPreference) => (
               <Pressable
-                key={preference}
-                onPress={() => togglePreference(preference)}
+                key={pubPreference}
+                onPress={() => togglePubPreference(pubPreference)}
                 style={[
                   styles.preferenceChip,
-                  selectedPreferences.includes(preference) &&
+                  selectedPubPreferences.includes(pubPreference) &&
                     styles.selectedPreferenceChip,
                 ]}
               >
                 <Text
                   style={[
                     styles.preferenceText,
-                    selectedPreferences.includes(preference) &&
+                    selectedPubPreferences.includes(pubPreference) &&
                       styles.selectedPreferenceText,
                   ]}
                 >
-                  {preference}
+                  {pubPreference}
                 </Text>
               </Pressable>
             ))}
           </View>
         ) : (
           <View style={styles.chipsContainer}>
-            {selectedPreferences.length > 0 ? (
-              selectedPreferences.map((preference) => (
-                <View key={preference} style={styles.selectedPreferenceChip}>
+            {selectedPubPreferences.length > 0 ? (
+              selectedPubPreferences.map((pubPreference) => (
+                <View key={pubPreference} style={styles.selectedPreferenceChip}>
                   <Text style={styles.selectedPreferenceText}>
-                    {preference}
+                    {pubPreference}
                   </Text>
                 </View>
               ))
