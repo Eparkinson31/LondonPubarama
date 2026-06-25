@@ -30,7 +30,7 @@ export default function ProfileScreen() {
     "Lager",
     "Cider",
     "Alcohol Free Beer",
-    "Guiness",
+    "Guinness",
     "Pimms",
     "Aperol Spritz",
     "Sunday Roast",
@@ -86,7 +86,7 @@ export default function ProfileScreen() {
   // UseEffect hook fetches the list of London areas from the backend API when the component mounts and stores
   // it in the areas state variable, which is then used to populate the location picker in the profile editing form.
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/location")
+    fetch("http://127.0.0.1:5000/alllocations")
       .then((response) => response.json())
       .then((data) => {
         setAreas(data);
