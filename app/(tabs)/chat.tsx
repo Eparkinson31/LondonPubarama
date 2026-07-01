@@ -56,14 +56,19 @@ export default function AboutScreen() {
   return (
     <View style={styles.container}>
       <FlatList
-        data={messages.slice(1)}
-        renderItem={({ item }) => (
-          <Text style={styles.text}>{item.content}</Text>
-        )}
+        inverted
+        style={styles.containerlist}
+        data={messages.slice(1).reverse()}
+        renderItem={({ item }) => {
+          if (item.role === "user") {
+            return <Text style={styles.textuser}>{item.content}</Text>;
+          }
+          return <Text style={styles.textchatbot}>{item.content}</Text>;
+        }}
       />
       <TextInput
         style={styles.TextInput}
-        placeholder="Enter question..."
+        placeholder="Ask your AI pub concierge..."
         placeholderTextColor="#6F6C43"
         value={prompt}
         onChangeText={setPrompt}
@@ -81,12 +86,43 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  containerlist: {
+    flex: 1,
+    width: "100%",
+    paddingHorizontal: 20,
+  },
   text: {
-    color: "#b03924",
+    color: "#6F6C43",
     fontWeight: "bold",
   },
+  textchatbot: {
+    maxWidth: "80%",
+    color: "#6F6C43",
+    fontWeight: "bold",
+    borderRadius: 12,
+    padding: 8,
+    marginVertical: 4,
+    alignSelf: "flex-end",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    backgroundColor: "#bdcfd3",
+    marginLeft: 20,
+  },
+  textuser: {
+    maxWidth: "80%",
+    color: "#6F6C43",
+    fontWeight: "bold",
+    borderRadius: 12,
+    padding: 8,
+    marginVertical: 4,
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    backgroundColor: "#fffcf2",
+    marginRight: 20,
+  },
   TextInput: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#6F6C43",
     backgroundColor: "#fffcf2",
     borderWidth: 1,
@@ -94,6 +130,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 16,
-    width: 250,
+    width: "80%",
   },
 });

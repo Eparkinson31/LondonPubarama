@@ -11,11 +11,19 @@ import {
 } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 
+interface Location {
+  city: string;
+  created_at: string;
+  id: number;
+  location: string;
+  postal_code: string;
+}
+
 export default function ProfileScreen() {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [areas, setAreas] = useState<string[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   const [selectedPubPreferences, setSelectedPubPreferences] = useState<
@@ -89,7 +97,7 @@ export default function ProfileScreen() {
     fetch("http://127.0.0.1:5000/alllocations")
       .then((response) => response.json())
       .then((data) => {
-        setAreas(data);
+        setLocations(data);
       })
       .catch((error) => {
         console.error(error);
@@ -137,8 +145,12 @@ export default function ProfileScreen() {
                 >
                   <Picker.Item label="Select your London area" value="" />
 
-                  {areas.map((area, index) => (
-                    <Picker.Item key={index} label={area} value={area} />
+                  {locations.map((location, index) => (
+                    <Picker.Item
+                      key={index}
+                      label={location.location}
+                      value={location.location}
+                    />
                   ))}
                 </Picker>
               </View>

@@ -38,15 +38,11 @@ export default function TabLayout() {
         />
 
         <Tabs.Screen
-          name="messages"
+          name="pubdex"
           options={{
-            title: "Messages",
+            title: "Pubdex",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons
-                name="chatbubble-ellipses-outline"
-                color={color}
-                size={size}
-              />
+              <Ionicons name="compass-outline" color={color} size={size} />
             ),
           }}
         />
