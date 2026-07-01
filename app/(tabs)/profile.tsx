@@ -18,13 +18,29 @@ interface Location {
   location: string;
   postal_code: string;
 }
+interface Profile {
+  created_at: string;
+  id: number;
+  name: string;
+  location: string;
+  friends: string[];
+  preferences: string[];
+}
 
 export default function ProfileScreen() {
-  const [name, setName] = useState("");
-  const [location, setLocation] = useState("");
+  //const [name, setName] = useState("");
+  //const [location, setLocation] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [locations, setLocations] = useState<Location[]>([]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profile, setProfile] = useState<Profile>({
+    name: "",
+    location: "",
+    created_at: "",
+    id: 0,
+    friends: [],
+    preferences: [],
+  });
 
   const [selectedPubPreferences, setSelectedPubPreferences] = useState<
     string[]
@@ -81,7 +97,18 @@ export default function ProfileScreen() {
       setProfileImage(result.assets[0].uri);
     }
   };
-
+  const setProfileName = (name: string) => {
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      name: name,
+    }));
+  };
+  const setProfileLocation = (location: string) => {
+    setProfile((prevProfile) => ({
+      ...prevProfile,
+      location: location,
+    }));
+  };
   const togglePubPreference = (pubpreference: string) => {
     if (selectedPubPreferences.includes(pubpreference)) {
       setSelectedPubPreferences(
@@ -134,14 +161,16 @@ export default function ProfileScreen() {
                 style={styles.nameInput}
                 placeholder="Enter Name"
                 placeholderTextColor="#6F6C43"
-                value={name}
-                onChangeText={setName}
+                value={profile.name}
+                onChangeText={setProfileName}
               />
 
               <View style={styles.pickerContainer}>
                 <Picker
                   selectedValue={location}
-                  onValueChange={(itemValue) => setLocation(String(itemValue))}
+                  onValueChange={(itemValue) =>
+                    setProfileLocation(String(itemValue))
+                  }
                 >
                   <Picker.Item label="Select your London area" value="" />
 
@@ -157,10 +186,12 @@ export default function ProfileScreen() {
             </>
           ) : (
             <>
-              <Text style={styles.name}>{name || "No name entered"}</Text>
+              <Text style={styles.name}>
+                {profile.name || "No name entered"}
+              </Text>
 
               <Text style={styles.location}>
-                {location || "No location selected"}
+                {profile.location || "No location selected"}
               </Text>
             </>
           )}

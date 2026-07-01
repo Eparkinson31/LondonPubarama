@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import MapView from "react-native-maps";
 
 {
   /*interface MapProps {
@@ -47,7 +48,7 @@ export default function SearchScreen() {
           initialViewState={{ latitude: 51.5074, longitude: -0.1278, zoom: 12 }}
           mapStyle="https://maplibre.org"
         ></Map>
-      </div>
+      </div>*/}
       
    <MapView
         style={styles.map}

@@ -28,11 +28,11 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="index"
+          name="discover"
           options={{
-            title: "Home",
+            title: "Discover",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home-outline" color={color} size={size} />
+              <Ionicons name="search-outline" color={color} size={size} />
             ),
           }}
         />
@@ -42,16 +42,16 @@ export default function TabLayout() {
           options={{
             title: "Pubdex",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="compass-outline" color={color} size={size} />
+              <Ionicons name="add-circle-outline" color={color} size={size} />
             ),
           }}
         />
         <Tabs.Screen
-          name="search"
+          name="badges"
           options={{
-            title: "Search",
+            title: "Badges",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="search-outline" color={color} size={size} />
+              <Ionicons name="trophy-outline" color={color} size={size} />
             ),
           }}
         />
