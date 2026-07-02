@@ -2,15 +2,13 @@
 
 import React, { useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
-import MapView from "react-native-maps";
+//import MapView from "react-native-maps";
 
-{
-  /*interface MapProps {
+/*interface MapProps {
   latitude: number;
   longitude: number;
   onMarkerClick: () => void; // Will bridge over asynchronously to native code
 }*/
-}
 
 export default function SearchScreen() {
   const [search, setSearch] = useState("");
@@ -49,8 +47,8 @@ export default function SearchScreen() {
           mapStyle="https://maplibre.org"
         ></Map>
       </div>*/}
-      
-   <MapView
+
+      {/*<MapView
         style={styles.map}
         initialRegion={{
           latitude: 51.5074,

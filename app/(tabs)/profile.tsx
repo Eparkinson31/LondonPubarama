@@ -26,6 +26,10 @@ interface Profile {
   friends: string[];
   preferences: string[];
 }
+interface ProfileUpdate {
+  id: number;
+  profile: Profile;
+}
 
 export default function ProfileScreen() {
   //const [name, setName] = useState("");
@@ -41,10 +45,6 @@ export default function ProfileScreen() {
     friends: [],
     preferences: [],
   });
-
-  const [selectedPubPreferences, setSelectedPubPreferences] = useState<
-    string[]
-  >([]);
 
   const pubPreferences = [
     "Traditional Pub",
@@ -85,6 +85,7 @@ export default function ProfileScreen() {
     "Outdoor Seating",
     "Wheelchair Accessible",
   ];
+
   // List of preferences for users to select from when editing their profile//
   const pickImageAsync = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -97,27 +98,90 @@ export default function ProfileScreen() {
       setProfileImage(result.assets[0].uri);
     }
   };
+
+  const createProfile = () => {
+    fetch("http://127.0.0.1:5000/createprofile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profile),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response data if needed
+        setProfile(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const updateProfile = () => {
+    const profileupdate: ProfileUpdate = {
+      id: profile.id,
+      profile: profile,
+    };
+    fetch("http://127.0.0.1:5000/updateprofile", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profileupdate),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Handle the response data if needed
+        setProfile(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const saveProfile = () => {
+    if (profile.id === 0) {
+      createProfile();
+    } else {
+      updateProfile();
+    }
+    setIsEditing(false);
+  };
+
+  const editProfile = () => {
+    setIsEditing(true);
+  };
+
   const setProfileName = (name: string) => {
     setProfile((prevProfile) => ({
       ...prevProfile,
       name: name,
     }));
   };
+
   const setProfileLocation = (location: string) => {
     setProfile((prevProfile) => ({
       ...prevProfile,
       location: location,
     }));
   };
+
   const togglePubPreference = (pubpreference: string) => {
-    if (selectedPubPreferences.includes(pubpreference)) {
-      setSelectedPubPreferences(
-        selectedPubPreferences.filter((item) => item !== pubpreference),
-      );
+    if (profile.preferences.includes(pubpreference)) {
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        preferences: prevProfile.preferences.filter(
+          (item) => item !== pubpreference,
+        ),
+      }));
     } else {
-      setSelectedPubPreferences([...selectedPubPreferences, pubpreference]);
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        preferences: [...prevProfile.preferences, pubpreference],
+      }));
     }
   };
+
   // UseEffect hook fetches the list of London areas from the backend API when the component mounts and stores
   // it in the areas state variable, which is then used to populate the location picker in the profile editing form.
   useEffect(() => {
@@ -167,7 +231,7 @@ export default function ProfileScreen() {
 
               <View style={styles.pickerContainer}>
                 <Picker
-                  selectedValue={location}
+                  selectedValue={profile.location}
                   onValueChange={(itemValue) =>
                     setProfileLocation(String(itemValue))
                   }
@@ -213,14 +277,14 @@ export default function ProfileScreen() {
                 onPress={() => togglePubPreference(pubPreference)}
                 style={[
                   styles.preferenceChip,
-                  selectedPubPreferences.includes(pubPreference) &&
+                  profile.preferences.includes(pubPreference) &&
                     styles.selectedPreferenceChip,
                 ]}
               >
                 <Text
                   style={[
                     styles.preferenceText,
-                    selectedPubPreferences.includes(pubPreference) &&
+                    profile.preferences.includes(pubPreference) &&
                       styles.selectedPreferenceText,
                   ]}
                 >
@@ -231,8 +295,8 @@ export default function ProfileScreen() {
           </View>
         ) : (
           <View style={styles.chipsContainer}>
-            {selectedPubPreferences.length > 0 ? (
-              selectedPubPreferences.map((pubPreference) => (
+            {profile.preferences.length > 0 ? (
+              profile.preferences.map((pubPreference) => (
                 <View key={pubPreference} style={styles.selectedPreferenceChip}>
                   <Text style={styles.selectedPreferenceText}>
                     {pubPreference}
@@ -246,14 +310,21 @@ export default function ProfileScreen() {
         )}
       </View>
 
-      <Pressable
-        style={styles.editprofilebutton}
-        onPress={() => setIsEditing(!isEditing)}
-      >
-        <Text style={styles.buttonText}>
-          {isEditing ? "Save Profile" : "Edit Profile"}
-        </Text>
-      </Pressable>
+      {isEditing ? (
+        <Pressable
+          style={styles.editprofilebutton}
+          onPress={() => saveProfile()}
+        >
+          <Text style={styles.buttonText}>{"Save Profile"}</Text>
+        </Pressable>
+      ) : (
+        <Pressable
+          style={styles.editprofilebutton}
+          onPress={() => editProfile()}
+        >
+          <Text style={styles.buttonText}>{"Edit Profile"}</Text>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }
