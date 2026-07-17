@@ -9,50 +9,63 @@ interface BasicInformation {
   ShortDescription: string;
 }
 
-const pubPreferences = [
-  "Traditional Pub",
-  "Craft Beer",
-  "Real Ale",
-  "IPA",
-  "Lager",
-  "Cider",
-  "Alcohol Free Beer",
-  "Guinness",
-  "Pimms",
-  "Aperol Spritz",
-  "Sunday Roast",
-  "Burgers",
-  "Vegan Options",
-  "Vegetarian Options",
-  "Pub Quiz",
-  "Live Music",
-  "Sports Screening",
-  "Fish and Chips",
-  "Open Mic Night",
-  "DJ Nights",
-  "Pool Table",
-  "Darts",
-  "Board Games",
-  "Fireplace",
-  "Karaoke",
-  "Dog Friendly",
-  "Family Friendly",
-  "Historic Pub",
-  "Riverside",
-  "Beer Garden",
-  "Rooftop",
-  "Cosy",
-  "Quiet",
-  "Lively",
-  "Late Night",
-  "Outdoor Seating",
-  "Wheelchair Accessible",
-];
+const pubPreferences = {
+  Beverages: [
+    "Traditional Pub",
+    "Craft Beer",
+    "Real Ale",
+    "IPA",
+    "Lager",
+    "Cider",
+    "Coke",
+    "Coke Zero",
+    "Diet Coke",
+    "Sprite",
+    "Coffee",
+    "Tea",
+    "Lemonade",
+    "Alcohol Free Beer",
+    "Guinness",
+    "Pimms",
+    "Aperol Spritz",
+  ],
+  Food: ["Sunday Roast", "Burgers", "Vegan Options", "Vegetarian Options"],
+  Entertainment: [
+    "Pub Quiz",
+    "Live Music",
+    "Sports Screening",
+    "Fish and Chips",
+    "Open Mic Night",
+    "DJ Nights",
+    "Pool Table",
+    "Darts",
+    "Board Games",
+    "Fireplace",
+    "Karaoke",
+  ],
+  Ambience: [
+    "Dog Friendly",
+    "Family Friendly",
+    "Historic Pub",
+    "Riverside",
+    "Beer Garden",
+    "Rooftop",
+    "Cosy",
+    "Quiet",
+    "Lively",
+    "Late Night",
+    "Outdoor Seating",
+    "Wheelchair Accessible",
+  ],
+};
 
 export default function Pubdex() {
   const [selectedPubPreferences, setSelectedPubPreferences] = useState<
     string[]
   >([]);
+
+  const [selectedCategory, setSelectedCategory] =
+    useState<keyof typeof pubPreferences>("Beverages");
 
   const togglePubPreference = (preference: string) => {
     if (selectedPubPreferences.includes(preference)) {
@@ -104,8 +117,31 @@ export default function Pubdex() {
         Please select the features that apply to your pub:
       </Text>
 
+      <View style={styles.tabsContainer}>
+        {Object.keys(pubPreferences).map((category) => (
+          <Pressable
+            key={category}
+            onPress={() =>
+              setSelectedCategory(category as keyof typeof pubPreferences)
+            }
+            style={[
+              styles.tab,
+              selectedCategory === category && styles.activeTab,
+            ]}
+          >
+            <Text
+              style={[
+                styles.tabText,
+                selectedCategory === category && styles.activeTabText,
+              ]}
+            >
+              {category}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
       <View style={styles.featuresContainer}>
-        {pubPreferences.map((preference) => (
+        {pubPreferences[selectedCategory].map((preference) => (
           <Pressable
             key={preference}
             onPress={() => togglePubPreference(preference)}
@@ -132,6 +168,18 @@ export default function Pubdex() {
 }
 
 const styles = StyleSheet.create({
+  categoryTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#6F6C43",
+    width: 30,
+    height: 20,
+    borderRadius: 25,
+    backgroundColor: "#bdcfd3",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
   container: {
     flex: 1,
     backgroundColor: "#fffcf2",
@@ -220,6 +268,32 @@ const styles = StyleSheet.create({
   },
 
   featuresTextSelected: {
+    color: "#FFFCF2",
+  },
+
+  tabsContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+
+  tab: {
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    backgroundColor: "#E8EEF0",
+    borderRadius: 20,
+    marginRight: 10,
+  },
+
+  activeTab: {
+    backgroundColor: "#6F6C43",
+  },
+
+  tabText: {
+    color: "#6F6C43",
+    fontWeight: "600",
+  },
+
+  activeTabText: {
     color: "#FFFCF2",
   },
 });
