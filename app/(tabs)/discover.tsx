@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-interface Card {
-  id: string;
-  title: string;
+interface Suggestion {
+  id: number;
+  name: string;
+  location: string;
+  summary: string;
 }
 
 export default function DiscoverScreen() {
-  const [recommendation, setRecommendation] = useState(
+  const [suggestions, setSuggestions] = useState<Suggestion[] | string>(
     "fetching recommendation...",
   );
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/suggestpubs/6")
+    fetch("http://127.0.0.1:5000/structuredsuggestpubs/6")
       .then((response) => response.json())
       .then((data) => {
-        setRecommendation(data.ai_response);
+        setSuggestions(data.suggestions);
       })
       .catch((error) => {
         console.error(error);
@@ -25,7 +27,17 @@ export default function DiscoverScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Discover London Pubs</Text>
-      <Text style={styles.heading}>{recommendation}</Text>
+      {typeof suggestions === "string" ? (
+        <Text style={styles.heading}>{suggestions}</Text>
+      ) : (
+        suggestions.map((suggestion) => (
+          <View key={suggestion.id} style={styles.card}>
+            <Text style={styles.title}>{suggestion.name}</Text>
+            <Text>{suggestion.location}</Text>
+            <Text>{suggestion.summary}</Text>
+          </View>
+        ))
+      )}
     </View>
   );
 }
