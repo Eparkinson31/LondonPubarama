@@ -1,5 +1,5 @@
-import React from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 interface Card {
   id: string;
@@ -7,48 +7,25 @@ interface Card {
 }
 
 export default function DiscoverScreen() {
-  const cards: Card[] = [
-    { id: "1", title: "Pub Gardens" },
-    { id: "2", title: "Pub Quiz happening tonight" },
-    { id: "3", title: "Traditional Pubs" },
-    { id: "4", title: "Dog Friendly" },
-    { id: "5", title: "Riverside Pubs" },
-  ];
+  const [recommendation, setRecommendation] = useState(
+    "fetching recommendation...",
+  );
 
-  const renderCard = ({ item }: { item: Card }) => {
-    if (item.id === "1") {
-      return (
-        <Pressable style={styles.cardGarden}>
-          <Text style={styles.title}>{item.title}</Text>
-        </Pressable>
-      );
-    }
-
-    if (item.id === "2") {
-      return (
-        <Pressable style={styles.cardTonight}>
-          <Text style={styles.title}>{item.title}</Text>
-        </Pressable>
-      );
-    }
-
-    return (
-      <Pressable style={styles.card}>
-        <Text style={styles.title}>{item.title}</Text>
-      </Pressable>
-    );
-  };
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/suggestpubs/6")
+      .then((response) => response.json())
+      .then((data) => {
+        setRecommendation(data.ai_response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Discover London Pubs</Text>
-
-      <FlatList
-        data={cards}
-        keyExtractor={(item) => item.id}
-        renderItem={renderCard}
-        contentContainerStyle={{ paddingHorizontal: 20 }}
-      />
+      <Text style={styles.heading}>{recommendation}</Text>
     </View>
   );
 }
