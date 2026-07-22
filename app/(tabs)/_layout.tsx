@@ -36,7 +36,15 @@ export default function TabLayout() {
             ),
           }}
         />
-
+        <Tabs.Screen
+          name="pubdex 2.0"
+          options={{
+            title: "Pubdex 2.0",
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="search-outline" color={color} size={size} />
+            ),
+          }}
+        />
         <Tabs.Screen
           name="pubdex"
           options={{

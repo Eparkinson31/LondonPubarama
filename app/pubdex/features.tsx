@@ -1,29 +1,6 @@
-import { Picker } from "@react-native-picker/picker";
-import React, { useEffect, useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-
-interface BasicInformation {
-  pubName: string;
-  created_at: string;
-  postal_code: string;
-  Address: string;
-  ShortDescription: string;
-}
-
-interface Location {
-  city: string;
-  created_at: string;
-  id: number;
-  location: string;
-  postal_code: string;
-}
+import { Link } from "expo-router";
+import React, { useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const pubPreferences = {
   Beverages: [
@@ -103,9 +80,6 @@ export default function Pubdex() {
     string[]
   >([]);
 
-  const [location, setLocation] = useState("");
-  const [pubName, setPubName] = useState("");
-  const [locations, setLocations] = useState<Location[]>([]);
   const [selectedCategory, setSelectedCategory] =
     useState<keyof typeof pubPreferences>("Beverages");
 
@@ -118,17 +92,6 @@ export default function Pubdex() {
       setSelectedPubPreferences([...selectedPubPreferences, preference]);
     }
   };
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:5000/alllocations")
-      .then((response) => response.json())
-      .then((data) => {
-        setLocations(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }, []);
 
   return (
     <ScrollView
@@ -164,44 +127,6 @@ export default function Pubdex() {
         </View>
       </View>
 
-      {/* Basic Information */}
-      <Text style={styles.sectionTitle}>Add Pub Name</Text>
-
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Pub name..."
-          placeholderTextColor="#9B9B9B"
-          value={pubName}
-          onChangeText={setPubName}
-          autoCapitalize="words"
-          autoCorrect={false}
-          clearButtonMode="while-editing"
-        />
-      </View>
-
-      {/* Location */}
-      <View style={styles.pickerContainer}>
-        <Text style={styles.sectionTitle}>Add Pub Location</Text>
-        <Picker
-          selectedValue={location}
-          onValueChange={(itemValue) => setLocation(String(itemValue))}
-        >
-          <Picker.Item
-            label="Select the area where the pub is located"
-            value=""
-          />
-
-          {locations.map((location, index) => (
-            <Picker.Item
-              key={index}
-              label={location.location}
-              value={location.location}
-            />
-          ))}
-        </Picker>
-      </View>
-
       {/* Features */}
       <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Pub Features</Text>
       <Text style={styles.sectionSubtitle}>
@@ -217,6 +142,12 @@ export default function Pubdex() {
             }
             style={[
               styles.tab,
+
+              category === "Beverages" && styles.beveragesTab,
+              category === "Food" && styles.foodTab,
+              category === "Entertainment" && styles.entertainmentTab,
+              category === "Ambience" && styles.ambienceTab,
+
               selectedCategory === category && styles.activeTab,
             ]}
           >
@@ -253,24 +184,17 @@ export default function Pubdex() {
             </Text>
           </Pressable>
         ))}
+        <Link href="/pubdex/picture" asChild>
+          <Pressable style={styles.nextButton}>
+            <Text style={styles.nextButtonText}>Next</Text>
+          </Pressable>
+        </Link>
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  categoryTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#6F6C43",
-    width: 30,
-    height: 20,
-    borderRadius: 25,
-    backgroundColor: "#bdcfd3",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
   container: {
     flex: 1,
     backgroundColor: "#fffcf2",
@@ -338,9 +262,9 @@ const styles = StyleSheet.create({
   },
 
   featuresChip: {
-    backgroundColor: "#E8EEF0",
+    backgroundColor: "#bdcfd3",
     borderWidth: 1,
-    borderColor: "#BDC3C7",
+    borderColor: "#bdcfd3",
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -354,7 +278,7 @@ const styles = StyleSheet.create({
   },
 
   featuresText: {
-    color: "#6F6C43",
+    color: "#fffcf2",
     fontWeight: "600",
   },
 
@@ -380,45 +304,48 @@ const styles = StyleSheet.create({
   },
 
   tabText: {
-    color: "#6F6C43",
+    color: "#FFFCF2",
     fontWeight: "600",
   },
 
   activeTabText: {
     color: "#FFFCF2",
   },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 14,
+  beveragesTab: {
+    backgroundColor: "#ce9fa7",
+  },
+
+  foodTab: {
+    backgroundColor: "#ce9fa7",
+  },
+
+  entertainmentTab: {
+    backgroundColor: "#ce9fa7",
+  },
+
+  ambienceTab: {
+    backgroundColor: "#ce9fa7",
+  },
+
+  nextButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#6F6C43",
     borderWidth: 1,
-    borderColor: "#bdcfd3",
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 10,
     paddingHorizontal: 16,
-    marginBottom: 24,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#6F6C43",
-    paddingVertical: 14,
-  },
-  location: {
-    fontSize: 18,
-    color: "#6F6C43",
-    marginTop: 5,
-  },
-  pickerContainer: {
-    backgroundColor: "#fffcf2",
-    borderRadius: 12,
-    overflow: "hidden",
+    marginRight: 10,
+    marginBottom: 10,
     marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  nextButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
