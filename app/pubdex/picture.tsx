@@ -13,6 +13,7 @@ import { captureRef } from "react-native-view-shot";
 import Button from "@/components/Button";
 import IconButton from "@/components/IconButton";
 import ImageViewer from "@/components/ImageViewer";
+import { ProgressBar } from "@/components/ProgressBar2";
 import { Link } from "expo-router";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
@@ -24,6 +25,9 @@ export default function Index() {
   //store selected image//
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+
+  const [currentProgress, setCurrentProgress] = useState(60);
+  const [isLinkVisible, setIsLinkVisible] = useState(false);
 
   //what editing options are shown//
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
@@ -44,10 +48,14 @@ export default function Index() {
     });
     //function opens users image library and lets them select and edit a phot and returns the image//
     if (!result.canceled) {
+      setCurrentProgress(80);
+      setIsLinkVisible(true);
       setSelectedImage(result.assets[0].uri);
       setShowAppOptions(true);
     } else {
       alert("You did not select any image.");
+      setIsLinkVisible(false);
+      setCurrentProgress(60);
     }
   };
   //makes sure user has selected image and alerts if they didn't//
@@ -97,6 +105,9 @@ export default function Index() {
   //a download in the browser and logs errors//
   return (
     <GestureHandlerRootView style={styles.container}>
+      {/* Tracker */}
+      <ProgressBar progress={currentProgress} />
+
       <View style={styles.imageContainer}>
         <View ref={imageRef} collapsable={false}>
           <ImageViewer
@@ -129,11 +140,15 @@ export default function Index() {
           />
         </View>
       )}
-      <Link href="/pubdex/confirmation" asChild>
-        <Pressable style={styles.nextButton}>
-          <Text style={styles.nextButtonText}>Next</Text>
-        </Pressable>
-      </Link>
+      {isLinkVisible && (
+        <View>
+          <Link href="/pubdex/confirmation" asChild>
+            <Pressable style={styles.nextButton}>
+              <Text style={styles.nextButtonText}>Next</Text>
+            </Pressable>
+          </Link>
+        </View>
+      )}
     </GestureHandlerRootView>
   );
 }

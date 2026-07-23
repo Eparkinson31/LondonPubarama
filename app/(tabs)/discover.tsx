@@ -33,8 +33,8 @@ export default function DiscoverScreen() {
         suggestions.map((suggestion) => (
           <View key={suggestion.id} style={styles.card}>
             <Text style={styles.title}>{suggestion.name}</Text>
-            <Text>{suggestion.location}</Text>
-            <Text>{suggestion.summary}</Text>
+            <Text style={styles.location}>{suggestion.location}</Text>
+            <Text style={styles.summary}>{suggestion.summary}</Text>
           </View>
         ))
       )}
@@ -88,5 +88,13 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 20,
     marginBottom: 15,
+  },
+  location: {
+    fontSize: 16,
+    color: "#ce9fa7",
+  },
+  summary: {
+    fontSize: 14,
+    color: "#6F6C43",
   },
 });

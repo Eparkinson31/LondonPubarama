@@ -1,10 +1,10 @@
+import { ProgressBar } from "@/components/ProgressBar2";
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const pubPreferences = {
   Beverages: [
-    "Traditional Pub",
     "Craft Beer",
     "Real Ale",
     "IPA",
@@ -49,7 +49,6 @@ const pubPreferences = {
     "Pub Quiz",
     "Live Music",
     "Sports Screening",
-    "Fish and Chips",
     "Open Mic Night",
     "DJ Nights",
     "Pool Table",
@@ -60,9 +59,10 @@ const pubPreferences = {
     "Live Sports",
   ],
   Ambience: [
+    "Traditional Pub",
+    "Historic Pub",
     "Dog Friendly",
     "Family Friendly",
-    "Historic Pub",
     "Riverside",
     "Beer Garden",
     "Rooftop",
@@ -82,14 +82,26 @@ export default function Pubdex() {
 
   const [selectedCategory, setSelectedCategory] =
     useState<keyof typeof pubPreferences>("Beverages");
+  const [currentProgress, setCurrentProgress] = useState(40);
+  const [isLinkVisible, setIsLinkVisible] = useState(false);
+
+  const updatePreferences = (prefs: string[]) => {
+    setIsLinkVisible(prefs.length > 0);
+    if (prefs.length > 0) {
+      setCurrentProgress(60);
+    } else {
+      setCurrentProgress(40);
+    }
+    setSelectedPubPreferences(prefs);
+  };
 
   const togglePubPreference = (preference: string) => {
     if (selectedPubPreferences.includes(preference)) {
-      setSelectedPubPreferences(
+      updatePreferences(
         selectedPubPreferences.filter((item) => item !== preference),
       );
     } else {
-      setSelectedPubPreferences([...selectedPubPreferences, preference]);
+      updatePreferences([...selectedPubPreferences, preference]);
     }
   };
 
@@ -100,32 +112,7 @@ export default function Pubdex() {
       showsVerticalScrollIndicator={false}
     >
       {/* Tracker */}
-      <View style={styles.tracker}>
-        <View style={styles.step}>
-          <View style={styles.circle}>
-            <Text style={styles.number}>1</Text>
-          </View>
-          <Text style={styles.label}>Details</Text>
-        </View>
-
-        <View style={styles.line} />
-
-        <View style={styles.step}>
-          <View style={styles.circle}>
-            <Text style={styles.number}>2</Text>
-          </View>
-          <Text style={styles.label}>Location</Text>
-        </View>
-
-        <View style={styles.line} />
-
-        <View style={styles.step}>
-          <View style={styles.circle}>
-            <Text style={styles.number}>3</Text>
-          </View>
-          <Text style={styles.label}>Finish</Text>
-        </View>
-      </View>
+      <ProgressBar progress={currentProgress} />
 
       {/* Features */}
       <Text style={[styles.sectionTitle, { marginTop: 20 }]}>Pub Features</Text>
@@ -184,12 +171,16 @@ export default function Pubdex() {
             </Text>
           </Pressable>
         ))}
-        <Link href="/pubdex/picture" asChild>
-          <Pressable style={styles.nextButton}>
-            <Text style={styles.nextButtonText}>Next</Text>
-          </Pressable>
-        </Link>
       </View>
+      {isLinkVisible && (
+        <View>
+          <Link href="/pubdex/picture" asChild>
+            <Pressable style={styles.nextButton}>
+              <Text style={styles.nextButtonText}>Next</Text>
+            </Pressable>
+          </Link>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -288,6 +279,7 @@ const styles = StyleSheet.create({
 
   tabsContainer: {
     flexDirection: "row",
+    flexWrap: "wrap",
     marginBottom: 20,
   },
 
@@ -297,6 +289,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E8EEF0",
     borderRadius: 20,
     marginRight: 10,
+    marginBottom: 10,
   },
 
   activeTab: {

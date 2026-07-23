@@ -1,3 +1,4 @@
+import { ProgressBar } from "@/components/ProgressBar2";
 import { Picker } from "@react-native-picker/picker";
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -15,10 +16,19 @@ export default function Pubdex() {
   const [location, setLocation] = useState("");
   const [isLinkVisible, setIsLinkVisible] = useState(false);
   const [locations, setLocations] = useState<Location[]>([]);
+  const [currentProgress, setCurrentProgress] = useState(20);
+
   const validateLocation = (text: string) => {
     setLocation(text);
     setIsLinkVisible(text.trim().length > 0);
+    if (text.trim().length > 0) {
+      setCurrentProgress(40);
+    } else {
+      setCurrentProgress(2);
+    }
   };
+
+  // };
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/alllocations")
@@ -37,33 +47,7 @@ export default function Pubdex() {
       contentContainerStyle={{ paddingBottom: 40 }}
       showsVerticalScrollIndicator={false}
     >
-      {/* Tracker */}
-      <View style={styles.tracker}>
-        <View style={styles.step}>
-          <View style={styles.circle}>
-            <Text style={styles.number}>1</Text>
-          </View>
-          <Text style={styles.label}>Details</Text>
-        </View>
-
-        <View style={styles.line} />
-
-        <View style={styles.step}>
-          <View style={styles.circle}>
-            <Text style={styles.number}>2</Text>
-          </View>
-          <Text style={styles.label}>Location</Text>
-        </View>
-
-        <View style={styles.line} />
-
-        <View style={styles.step}>
-          <View style={styles.circle}>
-            <Text style={styles.number}>3</Text>
-          </View>
-          <Text style={styles.label}>Finish</Text>
-        </View>
-      </View>
+      <ProgressBar progress={currentProgress} />
 
       {/* Location */}
       <View style={styles.pickerContainer}>

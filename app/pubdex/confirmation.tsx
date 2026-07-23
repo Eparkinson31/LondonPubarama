@@ -1,15 +1,19 @@
+import { ProgressBar } from "@/components/ProgressBar2";
 import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function AboutScreen() {
+export default function ConfirmationScreen() {
   return (
     <View style={styles.container}>
+      {/* Tracker */}
+      <ProgressBar progress={100} />
+
       <Text style={styles.text}>Thanks for adding a pub!</Text>
       <Text style={styles.text}>stickers to your photos and save them!</Text>
       <Text style={styles.text}>Enjoy!</Text>
       <Text style={styles.text}>Created by Elizabeth Parkinson</Text>
 
-      <Link href="/pubdex2.0" asChild>
+      <Link href="/pubdex" asChild>
         <Pressable style={styles.okayButton}>
           <Text style={styles.okayButtonText}>Okay</Text>
         </Pressable>
@@ -17,7 +21,7 @@ export default function AboutScreen() {
     </View>
   );
 }
-//Defines the about screen//
+//Defines the confirmation screen//
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -44,12 +48,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   okayButtonText: {
-    color: "#6F6C43",
+    color: "#fffcf2",
     fontSize: 16,
     fontWeight: "600",
   },
 });
 
-//Defines the styling for the about screen centering the content on the screen and setting background text and color//
+//Defines the styling for the confirmation screen centering the content on the screen and setting background text and color//
