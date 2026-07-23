@@ -11,23 +11,20 @@ export default function Button({ label, theme, onPress }: Props) {
   if (theme === "primary") {
     return (
       <View
-        style={[
-          styles.buttonContainer,
-          { borderWidth: 2, borderColor: "#e2409f", borderRadius: 20 },
-        ]}
+        style={[styles.buttonContainer]}
         // Border added to the button container to make it look like a sticker and border radius added to make the corners rounded//
       >
         <Pressable
-          style={[styles.button, { backgroundColor: "#edf1f9" }]}
+          style={[styles.button, { backgroundColor: "#6F6C43" }]}
           onPress={onPress}
         >
           <FontAwesome
             name="picture-o"
             size={18}
-            color="#e2409f"
+            color="#fffcf2"
             style={styles.buttonIcon}
           />
-          <Text style={[styles.buttonLabel, { color: "#e2409f" }]}>
+          <Text style={[styles.buttonLabel, { color: "#fffcf2" }]}>
             {label}
           </Text>
         </Pressable>
@@ -49,7 +46,7 @@ export default function Button({ label, theme, onPress }: Props) {
 // Defines the default button styling and behavior when the theme is not primary, which will show an alert when pressed//
 const styles = StyleSheet.create({
   buttonContainer: {
-    width: 320,
+    width: 220,
     height: 68,
     marginHorizontal: 20,
     alignItems: "center",
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
     padding: 3,
   },
   button: {
-    borderRadius: 10,
+    borderRadius: 12,
     width: "100%",
     height: "100%",
     alignItems: "center",
@@ -68,7 +65,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
   },
   buttonLabel: {
-    color: "#e2409f",
+    color: "#6F6C43",
     fontSize: 16,
   },
 });

@@ -3,14 +3,17 @@ import domtoimage from "dom-to-image";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import { useEffect, useRef, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Platform, StyleSheet, Text, View } from "react-native";
+import {
+    GestureHandlerRootView,
+    Pressable,
+} from "react-native-gesture-handler";
 import { captureRef } from "react-native-view-shot";
 
 import Button from "@/components/Button";
-import CircleButton from "@/components/CircleButton";
 import IconButton from "@/components/IconButton";
 import ImageViewer from "@/components/ImageViewer";
+import { Link } from "expo-router";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 // Download placeholder image//
@@ -51,11 +54,6 @@ export default function Index() {
   const onReset = () => {
     setShowAppOptions(false);
   };
-
-  const onAddSticker = () => {
-    setIsModalVisible(true);
-  };
-
   const onModalClose = () => {
     setIsModalVisible(false);
   };
@@ -111,7 +109,6 @@ export default function Index() {
         <View style={styles.optionsContainer}>
           <View style={styles.optionsRow}>
             <IconButton icon="refresh" label="Reset" onPress={onReset} />
-            <CircleButton onPress={onAddSticker} />
             <IconButton
               icon="save-alt"
               label="Save"
@@ -123,7 +120,7 @@ export default function Index() {
         <View style={styles.footerContainer}>
           <Button
             theme="primary"
-            label="Choose a photo"
+            label="Choose a pub photo"
             onPress={pickImageAsync}
           />
           <Button
@@ -132,6 +129,11 @@ export default function Index() {
           />
         </View>
       )}
+      <Link href="/pubdex/confirmation" asChild>
+        <Pressable style={styles.nextButton}>
+          <Text style={styles.nextButtonText}>Next</Text>
+        </Pressable>
+      </Link>
     </GestureHandlerRootView>
   );
 }
@@ -140,15 +142,22 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#FFFCF2",
     alignItems: "center",
   },
   imageContainer: {
     flex: 1,
+    marginRight: 10,
+    marginBottom: 5,
+    marginTop: 75,
   },
   footerContainer: {
     flex: 1 / 3,
     alignItems: "center",
+    backgroundColor: "#FFFCF2",
+    width: "100%",
+    paddingHorizontal: 20,
+    justifyContent: "space-evenly",
   },
   optionsContainer: {
     position: "absolute",
@@ -157,5 +166,33 @@ const styles = StyleSheet.create({
   optionsRow: {
     alignItems: "center",
     flexDirection: "row",
+  },
+  nextButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  nextButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  choosePhotoButton: {
+    width: 220,
+    height: 40,
+    backgroundColor: "#6F6C43",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
