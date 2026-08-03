@@ -1,43 +1,62 @@
-import { ProgressBar } from "@/components/ProgressBar2";
-import ThirdPlaceName from "@/components/ThirdPlaceName";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from "react-native";
 
-interface BasicInformation {
-  thirdPlaceName: string;
-  created_at: string;
-  postal_code: string;
-  address: string;
-  ShortDescription: string;
-}
-
-export default function Pubdex() {
+export default function ThirdPlaceName({
+  setCurrentProgress,
+  saveThirdPlaceName,
+}: {
+  setCurrentProgress: (progress: number) => void;
+  saveThirdPlaceName: (name: string) => void;
+}) {
   const [thirdPlaceName, setThirdPlaceName] = useState("");
-  const [currentProgress, setCurrentProgress] = useState(2);
+  const [isLinkVisible, setIsLinkVisible] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState("thirdPlaceName");
+  const validateThirdPlaceName = (text: string) => {
+    setThirdPlaceName(text);
+    setIsLinkVisible(text.trim().length > 0);
+    if (text.trim().length > 0) {
+      setCurrentProgress(20);
+    } else {
+      setCurrentProgress(2);
+    }
+  };
 
   return (
-    <ScrollView
+    <View
       style={styles.container}
-      contentContainerStyle={{ paddingBottom: 40 }}
-      showsVerticalScrollIndicator={false}
+      // ContainerStyle={{ paddingBottom: 40 }}
+      // showsVerticalScrollIndicator={false}
     >
-      {/* Tracker */}
-      <ProgressBar progress={currentProgress} />
-      {currentPage === "thirdPlaceName" && (
-        <ThirdPlaceName
-          setCurrentProgress={setCurrentProgress}
-          saveThirdPlaceName={(name: string) => {
-            setThirdPlaceName(name);
-            setCurrentPage("locations");
-          }}
+      {/* Add Third Place Name */}
+      <Text style={styles.sectionTitle}>Add Third Place Name</Text>
+
+      <View style={styles.searchContainer}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Third place name..."
+          placeholderTextColor="#9B9B9B"
+          value={thirdPlaceName}
+          onChangeText={validateThirdPlaceName}
+          autoCapitalize="words"
+          autoCorrect={false}
+          clearButtonMode="while-editing"
         />
+      </View>
+      {isLinkVisible && (
+        <Pressable
+          style={styles.nextButton}
+          onPress={() => saveThirdPlaceName(thirdPlaceName)}
+        >
+          <Text style={styles.nextButtonText}>Next</Text>
+        </Pressable>
       )}
-      {currentPage === "locations" && (
-        <Text>Locations Component Placeholder</Text>
-      )}
-    </ScrollView>
+    </View>
   );
 }
 

@@ -3,7 +3,7 @@ import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
-const pubPreferences = {
+const features = {
   Beverages: [
     "Craft Beer",
     "Real Ale",
@@ -75,13 +75,11 @@ const pubPreferences = {
   ],
 };
 
-export default function Pubdex() {
-  const [selectedPubPreferences, setSelectedPubPreferences] = useState<
-    string[]
-  >([]);
+export default function Features() {
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
 
   const [selectedCategory, setSelectedCategory] =
-    useState<keyof typeof pubPreferences>("Beverages");
+    useState<keyof typeof features>("Beverages");
   const [currentProgress, setCurrentProgress] = useState(40);
   const [isLinkVisible, setIsLinkVisible] = useState(false);
 
@@ -92,16 +90,14 @@ export default function Pubdex() {
     } else {
       setCurrentProgress(40);
     }
-    setSelectedPubPreferences(prefs);
+    setSelectedFeatures(prefs);
   };
 
-  const togglePubPreference = (preference: string) => {
-    if (selectedPubPreferences.includes(preference)) {
-      updatePreferences(
-        selectedPubPreferences.filter((item) => item !== preference),
-      );
+  const toggleFeature = (preference: string) => {
+    if (selectedFeatures.includes(preference)) {
+      updatePreferences(selectedFeatures.filter((item) => item !== preference));
     } else {
-      updatePreferences([...selectedPubPreferences, preference]);
+      updatePreferences([...selectedFeatures, preference]);
     }
   };
 
@@ -121,11 +117,11 @@ export default function Pubdex() {
       </Text>
 
       <View style={styles.tabsContainer}>
-        {Object.keys(pubPreferences).map((category) => (
+        {Object.keys(features).map((category) => (
           <Pressable
             key={category}
             onPress={() =>
-              setSelectedCategory(category as keyof typeof pubPreferences)
+              setSelectedCategory(category as keyof typeof features)
             }
             style={[
               styles.tab,
@@ -150,20 +146,20 @@ export default function Pubdex() {
         ))}
       </View>
       <View style={styles.featuresContainer}>
-        {pubPreferences[selectedCategory].map((preference) => (
+        {features[selectedCategory].map((preference) => (
           <Pressable
             key={preference}
-            onPress={() => togglePubPreference(preference)}
+            onPress={() => toggleFeature(preference)}
             style={[
               styles.featuresChip,
-              selectedPubPreferences.includes(preference) &&
+              selectedFeatures.includes(preference) &&
                 styles.featuresChipSelected,
             ]}
           >
             <Text
               style={[
                 styles.featuresText,
-                selectedPubPreferences.includes(preference) &&
+                selectedFeatures.includes(preference) &&
                   styles.featuresTextSelected,
               ]}
             >
