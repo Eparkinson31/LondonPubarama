@@ -12,7 +12,7 @@ interface Location {
   postal_code: string;
 }
 
-export default function Pubdex() {
+export default function Locations() {
   const [location, setLocation] = useState("");
   const [isLinkVisible, setIsLinkVisible] = useState(false);
   const [locations, setLocations] = useState<Location[]>([]);
@@ -71,7 +71,7 @@ export default function Pubdex() {
         </Picker>
       </View>
       {isLinkVisible && (
-        <Link href="/pubdex/features" asChild>
+        <Link href="/thirdPlace/features" asChild>
           <Pressable style={styles.nextButton}>
             <Text style={styles.nextButtonText}>Next</Text>
           </Pressable>

@@ -5,8 +5,8 @@ import * as MediaLibrary from "expo-media-library";
 import { useEffect, useRef, useState } from "react";
 import { Platform, StyleSheet, Text, View } from "react-native";
 import {
-    GestureHandlerRootView,
-    Pressable,
+  GestureHandlerRootView,
+  Pressable,
 } from "react-native-gesture-handler";
 import { captureRef } from "react-native-view-shot";
 
@@ -18,7 +18,7 @@ import { Link } from "expo-router";
 
 const PlaceholderImage = require("@/assets/images/background-image.png");
 // Download placeholder image//
-export default function Index() {
+export default function Picture() {
   const [selectedImage, setSelectedImage] = useState<string | undefined>(
     undefined,
   );
@@ -142,7 +142,7 @@ export default function Index() {
       )}
       {isLinkVisible && (
         <View>
-          <Link href="/pubdex/confirmation" asChild>
+          <Link href="/thirdPlace/confirmation" asChild>
             <Pressable style={styles.nextButton}>
               <Text style={styles.nextButtonText}>Next</Text>
             </Pressable>
@@ -159,6 +159,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FFFCF2",
     alignItems: "center",
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
   imageContainer: {
     flex: 1,

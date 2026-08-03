@@ -5,7 +5,7 @@ export default function ConfirmationScreen() {
     <View style={styles.container}>
       <Text style={styles.text}>Badges Tracker</Text>
       <Text style={styles.text}>
-        Collect badges as you explore London pubs!
+        Collect badges as you explore Third Places!
       </Text>
       <View style={styles.circlesContainer}>
         <View style={styles.circle} />

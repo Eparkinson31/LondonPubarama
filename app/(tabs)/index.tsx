@@ -1,9 +1,43 @@
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-export default function FeedTab() {
+interface Suggestion {
+  id: number;
+  name: string;
+  location: string;
+  summary: string;
+}
+
+export default function DiscoverScreen() {
+  const [suggestions, setSuggestions] = useState<Suggestion[] | string>(
+    "fetching recommendation...",
+  );
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/structuredsuggestthirdplaces/6")
+      .then((response) => response.json())
+      .then((data) => {
+        setSuggestions(data.suggestions);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>This is your Main Tab Feed</Text>
+      <Text style={styles.heading}>Discover My Third Spaces</Text>
+      {typeof suggestions === "string" ? (
+        <Text style={styles.heading}>{suggestions}</Text>
+      ) : (
+        suggestions.map((suggestion) => (
+          <View key={suggestion.id} style={styles.card}>
+            <Text style={styles.title}>{suggestion.name}</Text>
+            <Text style={styles.location}>{suggestion.location}</Text>
+            <Text style={styles.summary}>{suggestion.summary}</Text>
+          </View>
+        ))
+      )}
     </View>
   );
 }
@@ -11,9 +45,56 @@ export default function FeedTab() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#fffcf2",
+    paddingTop: 50,
   },
-  text: { fontSize: 18 },
+
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginHorizontal: 20,
+    marginBottom: 15,
+    color: "#6F6C43",
+  },
+
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#6F6C43",
+  },
+
+  cardTonight: {
+    backgroundColor: "#F7F3E9",
+    borderWidth: 5,
+    borderColor: "#bdcfd3",
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 15,
+  },
+
+  cardGarden: {
+    backgroundColor: "#F7F3E9",
+    borderWidth: 5,
+    borderColor: "#bdcfd3",
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 15,
+  },
+
+  card: {
+    backgroundColor: "#F7F3E9",
+    borderWidth: 5,
+    borderColor: "#bdcfd3",
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 15,
+  },
+  location: {
+    fontSize: 16,
+    color: "#ce9fa7",
+  },
+  summary: {
+    fontSize: 14,
+    color: "#6F6C43",
+  },
 });

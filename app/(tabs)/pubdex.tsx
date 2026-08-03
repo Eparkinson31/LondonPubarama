@@ -11,20 +11,20 @@ import {
 } from "react-native";
 
 interface BasicInformation {
-  pubName: string;
+  thirdPlaceName: string;
   created_at: string;
   postal_code: string;
-  Address: string;
+  address: string;
   ShortDescription: string;
 }
 
 export default function Pubdex() {
-  const [pubName, setPubName] = useState("");
+  const [thirdPlaceName, setThirdPlaceName] = useState("");
   const [isLinkVisible, setIsLinkVisible] = useState(false);
   const [currentProgress, setCurrentProgress] = useState(2);
 
-  const validatePubName = (text: string) => {
-    setPubName(text);
+  const validateThirdPlaceName = (text: string) => {
+    setThirdPlaceName(text);
     setIsLinkVisible(text.trim().length > 0);
     if (text.trim().length > 0) {
       setCurrentProgress(20);
@@ -42,23 +42,23 @@ export default function Pubdex() {
       {/* Tracker */}
       <ProgressBar progress={currentProgress} />
 
-      {/* Add Pub Name */}
-      <Text style={styles.sectionTitle}>Add Pub Name</Text>
+      {/* Add Third Place Name */}
+      <Text style={styles.sectionTitle}>Add Third Place Name</Text>
 
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Pub name..."
+          placeholder="Third place name..."
           placeholderTextColor="#9B9B9B"
-          value={pubName}
-          onChangeText={validatePubName}
+          value={thirdPlaceName}
+          onChangeText={validateThirdPlaceName}
           autoCapitalize="words"
           autoCorrect={false}
           clearButtonMode="while-editing"
         />
       </View>
       {isLinkVisible && (
-        <Link href="/pubdex/locations" asChild>
+        <Link href="/thirdPlace/locations" asChild>
           <Pressable style={styles.nextButton}>
             <Text style={styles.nextButtonText}>Next</Text>
           </Pressable>

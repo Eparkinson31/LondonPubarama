@@ -174,7 +174,7 @@ export default function Pubdex() {
       </View>
       {isLinkVisible && (
         <View>
-          <Link href="/pubdex/picture" asChild>
+          <Link href="/thirdPlace/picture" asChild>
             <Pressable style={styles.nextButton}>
               <Text style={styles.nextButtonText}>Next</Text>
             </Pressable>

@@ -24,7 +24,7 @@ interface Profile {
   name: string;
   location: string;
   friends: string[];
-  preferences: string[];
+  features: string[];
 }
 interface ProfileUpdate {
   id: number;
@@ -43,10 +43,10 @@ export default function ProfileScreen() {
     created_at: "",
     id: 0,
     friends: [],
-    preferences: [],
+    features: [],
   });
 
-  const pubPreferences = [
+  const Features = [
     "Traditional Pub",
     "Craft Beer",
     "Real Ale",
@@ -166,18 +166,16 @@ export default function ProfileScreen() {
     }));
   };
 
-  const togglePubPreference = (pubpreference: string) => {
-    if (profile.preferences.includes(pubpreference)) {
+  const toggleFeatures = (feature: string) => {
+    if (profile.features.includes(feature)) {
       setProfile((prevProfile) => ({
         ...prevProfile,
-        preferences: prevProfile.preferences.filter(
-          (item) => item !== pubpreference,
-        ),
+        features: prevProfile.features.filter((item) => item !== feature),
       }));
     } else {
       setProfile((prevProfile) => ({
         ...prevProfile,
-        preferences: [...prevProfile.preferences, pubpreference],
+        features: [...prevProfile.features, feature],
       }));
     }
   };
@@ -271,36 +269,34 @@ export default function ProfileScreen() {
 
         {isEditing ? (
           <View style={styles.chipsContainer}>
-            {pubPreferences.map((pubPreference) => (
+            {Features.map((feature) => (
               <Pressable
-                key={pubPreference}
-                onPress={() => togglePubPreference(pubPreference)}
+                key={feature}
+                onPress={() => toggleFeatures(feature)}
                 style={[
                   styles.preferenceChip,
-                  profile.preferences.includes(pubPreference) &&
-                    styles.selectedPreferenceChip,
+                  profile.features.includes(feature) &&
+                    styles.selectedFeatureChip,
                 ]}
               >
                 <Text
                   style={[
                     styles.preferenceText,
-                    profile.preferences.includes(pubPreference) &&
-                      styles.selectedPreferenceText,
+                    profile.features.includes(feature) &&
+                      styles.selectedFeatureText,
                   ]}
                 >
-                  {pubPreference}
+                  {feature}
                 </Text>
               </Pressable>
             ))}
           </View>
         ) : (
           <View style={styles.chipsContainer}>
-            {profile.preferences.length > 0 ? (
-              profile.preferences.map((pubPreference) => (
-                <View key={pubPreference} style={styles.selectedPreferenceChip}>
-                  <Text style={styles.selectedPreferenceText}>
-                    {pubPreference}
-                  </Text>
+            {profile.features.length > 0 ? (
+              profile.features.map((feature) => (
+                <View key={feature} style={styles.selectedFeatureChip}>
+                  <Text style={styles.selectedFeatureText}>{feature}</Text>
                 </View>
               ))
             ) : (
@@ -433,7 +429,7 @@ const styles = StyleSheet.create({
     margin: 4,
   },
 
-  selectedPreferenceChip: {
+  selectedFeatureChip: {
     backgroundColor: "#6F6C43",
     borderRadius: 20,
     paddingVertical: 8,
@@ -445,7 +441,7 @@ const styles = StyleSheet.create({
     color: "#6F6C43",
   },
 
-  selectedPreferenceText: {
+  selectedFeatureText: {
     color: "#fffcf2",
   },
 

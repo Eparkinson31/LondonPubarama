@@ -68,7 +68,7 @@ export default function AboutScreen() {
       />
       <TextInput
         style={styles.TextInput}
-        placeholder="Ask your AI pub concierge..."
+        placeholder="Ask your Third Place assistant..."
         placeholderTextColor="#6F6C43"
         value={prompt}
         onChangeText={setPrompt}

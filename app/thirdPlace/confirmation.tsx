@@ -2,16 +2,14 @@ import { ProgressBar } from "@/components/ProgressBar2";
 import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function ConfirmationScreen() {
+export default function Confirmation() {
   return (
     <View style={styles.container}>
       {/* Tracker */}
       <ProgressBar progress={100} />
 
-      <Text style={styles.text}>Thanks for adding a pub!</Text>
-      <Text style={styles.text}>stickers to your photos and save them!</Text>
+      <Text style={styles.text}>Thanks for adding a third place!</Text>
       <Text style={styles.text}>Enjoy!</Text>
-      <Text style={styles.text}>Created by Elizabeth Parkinson</Text>
 
       <Link href="/pubdex" asChild>
         <Pressable style={styles.okayButton}>
@@ -28,6 +26,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fffcf2",
     justifyContent: "center",
     alignItems: "center",
+    paddingTop: 40,
+    paddingHorizontal: 20,
   },
   text: {
     color: "#e2409f",

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "StickerSmash",
-    "slug": "StickerSmash",
+    "name": "My Third Place",
+    "slug": "my-third-place",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "stickersmash",
+    "scheme": "mythirdplace",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
