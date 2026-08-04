@@ -1,21 +1,41 @@
+import Confirmation from "@/components/Confirmation2";
+import Features from "@/components/Features2";
+import Locations from "@/components/Locations2";
+import Picture from "@/components/Picture2";
 import { ProgressBar } from "@/components/ProgressBar2";
 import ThirdPlaceName from "@/components/ThirdPlaceName";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
-interface BasicInformation {
-  thirdPlaceName: string;
+interface Features {
+  tags: string[];
+}
+{
+  /* Matches Supabase Saved Third Places */
+}
+interface SavedThirdPlace {
+  name: string;
   created_at: string;
-  postal_code: string;
   address: string;
-  ShortDescription: string;
+  id: number;
+  location: string;
+  features: Features;
 }
 
 export default function Pubdex() {
-  const [thirdPlaceName, setThirdPlaceName] = useState("");
+  const [savedThirdPlace, setSavedThirdPlace] = useState({} as SavedThirdPlace);
   const [currentProgress, setCurrentProgress] = useState(2);
+  const [image, setImage] = useState<string | undefined>(undefined);
 
+  // Name of Page
   const [currentPage, setCurrentPage] = useState("thirdPlaceName");
+  const saveThirdPlace = (
+    thirdPlace: SavedThirdPlace,
+    image: string | undefined,
+  ) => {
+    // Save the third place to your database or state management
+    console.log("Saving third place:", thirdPlace, "with image:", image);
+  };
 
   return (
     <ScrollView
@@ -25,17 +45,69 @@ export default function Pubdex() {
     >
       {/* Tracker */}
       <ProgressBar progress={currentProgress} />
+
+      {/* Asking name of third place */}
       {currentPage === "thirdPlaceName" && (
         <ThirdPlaceName
           setCurrentProgress={setCurrentProgress}
+          styles={styles}
           saveThirdPlaceName={(name: string) => {
-            setThirdPlaceName(name);
+            setSavedThirdPlace({ ...savedThirdPlace, name });
             setCurrentPage("locations");
           }}
         />
       )}
+
+      {/* Asking for location information */}
       {currentPage === "locations" && (
-        <Text>Locations Component Placeholder</Text>
+        <Locations
+          setCurrentProgress={setCurrentProgress}
+          styles={styles}
+          saveLocationName={(location: string) => {
+            setSavedThirdPlace({ ...savedThirdPlace, location: location });
+            setCurrentPage("features");
+          }}
+        />
+      )}
+
+      {/* Asking for features */}
+      {currentPage === "features" && (
+        <Features
+          setCurrentProgress={setCurrentProgress}
+          styles={styles}
+          saveFeatureSelection={(features: string[]) => {
+            setSavedThirdPlace({
+              ...savedThirdPlace,
+              features: { tags: features },
+            });
+            setCurrentPage("picture");
+          }}
+        />
+      )}
+
+      {/* Asking for a picture */}
+      {currentPage === "picture" && (
+        <Picture
+          setCurrentProgress={setCurrentProgress}
+          styles={styles}
+          saveSelectedImage={(image: string | undefined) => {
+            setImage(image);
+            saveThirdPlace(savedThirdPlace, image);
+            setCurrentPage("confirmation");
+            setCurrentProgress(100);
+          }}
+        />
+      )}
+
+      {/* Confirmation */}
+      {currentPage === "confirmation" && (
+        <Confirmation
+          styles={styles}
+          okay={() => {
+            setCurrentProgress(2);
+            setCurrentPage("thirdPlaceName");
+          }}
+        />
       )}
     </ScrollView>
   );
@@ -154,6 +226,46 @@ const styles = StyleSheet.create({
   },
 
   nextButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  okayButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  okayButtonText: {
+    color: "#fffcf2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  cancelButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#b03924",
+    borderWidth: 1,
+    borderColor: "#b03924",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 40,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cancelButtonText: {
     color: "#FFFCF2",
     fontSize: 16,
     fontWeight: "600",

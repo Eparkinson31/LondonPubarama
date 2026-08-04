@@ -1,17 +1,13 @@
 import React, { useState } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View
-} from "react-native";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function ThirdPlaceName({
   setCurrentProgress,
+  styles,
   saveThirdPlaceName,
 }: {
   setCurrentProgress: (progress: number) => void;
+  styles: any;
   saveThirdPlaceName: (name: string) => void;
 }) {
   const [thirdPlaceName, setThirdPlaceName] = useState("");
@@ -60,7 +56,7 @@ export default function ThirdPlaceName({
   );
 }
 
-const styles = StyleSheet.create({
+const oldstyles = StyleSheet.create({
   categoryTitle: {
     fontSize: 18,
     fontWeight: "bold",
