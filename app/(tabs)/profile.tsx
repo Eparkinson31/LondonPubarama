@@ -1,3 +1,4 @@
+import BackEnd from "@/components/BackEnd";
 import { Picker } from "@react-native-picker/picker";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
@@ -100,7 +101,7 @@ export default function ProfileScreen() {
   };
 
   const createProfile = () => {
-    fetch("http://127.0.0.1:5000/createprofile", {
+    fetch(`${BackEnd()}/createprofile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +123,7 @@ export default function ProfileScreen() {
       id: profile.id,
       profile: profile,
     };
-    fetch("http://127.0.0.1:5000/updateprofile", {
+    fetch(`${BackEnd()}/updateprofile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -183,7 +184,7 @@ export default function ProfileScreen() {
   // UseEffect hook fetches the list of London areas from the backend API when the component mounts and stores
   // it in the areas state variable, which is then used to populate the location picker in the profile editing form.
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/alllocations")
+    fetch(`${BackEnd()}/alllocations`)
       .then((response) => response.json())
       .then((data) => {
         setLocations(data);

@@ -1,6 +1,8 @@
+import BackEnd from "@/components/BackEnd";
 import Confirmation from "@/components/Confirmation2";
 import Features from "@/components/Features2";
 import Locations from "@/components/Locations2";
+import PhotoUpload from "@/components/PhotoUpload";
 import Picture from "@/components/Picture2";
 import { ProgressBar } from "@/components/ProgressBar2";
 import ThirdPlaceName from "@/components/ThirdPlaceName";
@@ -20,21 +22,33 @@ interface SavedThirdPlace {
   id: number;
   location: string;
   features: Features;
+  image_url: string;
 }
 
 export default function Pubdex() {
   const [savedThirdPlace, setSavedThirdPlace] = useState({} as SavedThirdPlace);
   const [currentProgress, setCurrentProgress] = useState(2);
-  const [image, setImage] = useState<string | undefined>(undefined);
 
   // Name of Page
   const [currentPage, setCurrentPage] = useState("thirdPlaceName");
-  const saveThirdPlace = (
-    thirdPlace: SavedThirdPlace,
-    image: string | undefined,
-  ) => {
+
+  const saveThirdPlace = (thirdPlace: SavedThirdPlace) => {
     // Save the third place to your database or state management
-    console.log("Saving third place:", thirdPlace, "with image:", image);
+    fetch(`${BackEnd()}/createsavedthirdplace`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(thirdPlace),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSavedThirdPlace(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log("Saving third place:", thirdPlace);
   };
 
   return (
@@ -86,13 +100,27 @@ export default function Pubdex() {
       )}
 
       {/* Asking for a picture */}
-      {currentPage === "picture" && (
+      {currentPage === "old picture" && (
         <Picture
           setCurrentProgress={setCurrentProgress}
           styles={styles}
-          saveSelectedImage={(image: string | undefined) => {
-            setImage(image);
-            saveThirdPlace(savedThirdPlace, image);
+          saveSelectedImage={(image_url: string) => {
+            const thirdplace = { ...savedThirdPlace, image_url: image_url };
+            setSavedThirdPlace(thirdplace);
+            saveThirdPlace(thirdplace);
+            setCurrentPage("confirmation");
+            setCurrentProgress(100);
+          }}
+        />
+      )}
+
+      {/* Asking for a picture */}
+      {currentPage === "picture" && (
+        <PhotoUpload
+          setImageFullPath={(image_url: string) => {
+            const thirdplace = { ...savedThirdPlace, image_url: image_url };
+            setSavedThirdPlace(thirdplace);
+            saveThirdPlace(thirdplace);
             setCurrentPage("confirmation");
             setCurrentProgress(100);
           }}

@@ -1,4 +1,5 @@
 // Defines the screen/content for the about tab in app//
+import BackEnd from "@/components/BackEnd";
 import { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
@@ -15,7 +16,7 @@ export default function AboutScreen() {
 
   const getChat = async (newMessages: Message[]) => {
     try {
-      const response = await fetch("http://127.0.0.1:5000/chat", {
+      const response = await fetch(`${BackEnd()}/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,34 +93,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   text: {
-    color: "#6F6C43",
+    color: "#ce9fa7",
     fontWeight: "bold",
   },
   textchatbot: {
     maxWidth: "80%",
-    color: "#6F6C43",
+    color: "#ce9fa7",
     fontWeight: "bold",
-    borderRadius: 12,
-    padding: 8,
+    borderRadius: 45,
+    padding: 20,
     marginVertical: 4,
-    alignSelf: "flex-end",
-    borderWidth: 1,
-    borderColor: "#6F6C43",
-    backgroundColor: "#bdcfd3",
+    alignSelf: "flex-start",
+    backgroundColor: "#F7F3E9",
+    borderWidth: 2,
+    borderColor: "#ce9fa7",
     marginLeft: 20,
   },
   textuser: {
     maxWidth: "80%",
-    color: "#6F6C43",
+    color: "#ce9fa7",
     fontWeight: "bold",
-    borderRadius: 12,
-    padding: 8,
+    borderRadius: 45,
+    padding: 20,
     marginVertical: 4,
-    alignSelf: "flex-start",
-    borderWidth: 1,
-    borderColor: "#6F6C43",
-    backgroundColor: "#fffcf2",
-    marginRight: 20,
+    alignSelf: "flex-end",
+    backgroundColor: "#bdcfd3",
+    borderWidth: 2,
+    borderColor: "#ce9fa7",
+    marginLeft: 20,
   },
   TextInput: {
     fontSize: 16,

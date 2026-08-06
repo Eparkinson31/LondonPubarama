@@ -1,4 +1,8 @@
 //This file defines the default screen that is shown when tabs is opened//
+import BackEnd from "@/components/BackEnd";
+import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
+import ImageViewer from "@/components/ImageViewer";
 import domtoimage from "dom-to-image";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
@@ -10,11 +14,13 @@ import {
 } from "react-native-gesture-handler";
 import { captureRef } from "react-native-view-shot";
 
-import Button from "@/components/Button";
-import IconButton from "@/components/IconButton";
-import ImageViewer from "@/components/ImageViewer";
+interface ReactNativeFile {
+  uri: string;
+  type: string;
+  name: string;
+}
 
-const PlaceholderImage = require("@/assets/images/background-image.png");
+const PlaceholderImage = require("@/assets/images/placeholderimage.png");
 // Download placeholder image//
 export default function Picture({
   setCurrentProgress,
@@ -23,11 +29,9 @@ export default function Picture({
 }: {
   setCurrentProgress: (progress: number) => void;
   styles: any;
-  saveSelectedImage: (image: string | undefined) => void;
+  saveSelectedImage: (image: string) => void;
 }) {
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(
-    undefined,
-  );
+  const [selectedImage, setSelectedImage] = useState("");
   //store selected image//
   const [showAppOptions, setShowAppOptions] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -43,6 +47,36 @@ export default function Picture({
       requestPermission();
     }
   }, []);
+
+  const saveImage = async (image: string): Promise<string> => {
+    const formData = new FormData();
+    var url = "https://example.com/placeholder-image.jpg";
+    formData.append("savename", "thirdplacephoto.jpg");
+    formData.append("mimetype", "image/jpeg");
+    formData.append("file", {
+      uri: image,
+      type: "image/jpeg",
+      name: "thirdplacephoto.jpg",
+    } as any);
+
+    return fetch(`${BackEnd()}/thirdplaceuploadphoto`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        url = data.fullPath;
+        return data.fullPath;
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+        return url;
+      });
+  };
+
   //checks if app has permission to access media library//
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -117,6 +151,7 @@ export default function Picture({
           />
         </View>
       </View>
+      <Text style={styles.sectionSubtitle}>{selectedImage}</Text>
       {showAppOptions ? (
         <View style={styles.optionsContainer}>
           <View style={styles.optionsRow}>
@@ -145,9 +180,11 @@ export default function Picture({
         <View>
           <Pressable
             style={styles.nextButton}
-            onPress={() => saveSelectedImage(selectedImage)}
+            onPress={async () =>
+              saveSelectedImage(await saveImage(selectedImage))
+            }
           >
-            <Text style={styles.nextButtonText}>Next</Text>
+            <Text style={styles.nextButtonText}>Next {selectedImage}</Text>
           </Pressable>
         </View>
       )}

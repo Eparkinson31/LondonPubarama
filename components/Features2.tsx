@@ -124,10 +124,10 @@ export default function Features({
             style={[
               featurestyles.tab,
 
-              category === "Beverages" && featurestyles.beveragesTab,
-              category === "Food" && featurestyles.foodTab,
-              category === "Entertainment" && featurestyles.entertainmentTab,
-              category === "Ambience" && featurestyles.ambienceTab,
+              category === "Beverages" && featurestyles.editprofilebutton,
+              category === "Food" && featurestyles.editprofilebutton,
+              category === "Entertainment" && featurestyles.editprofilebutton,
+              category === "Ambience" && featurestyles.editprofilebutton,
 
               selectedCategory === category && featurestyles.activeTab,
             ]}
@@ -300,5 +300,13 @@ const featurestyles = StyleSheet.create({
 
   ambienceTab: {
     backgroundColor: "#ce9fa7",
+  },
+  editprofilebutton: {
+    marginTop: 10,
+    backgroundColor: "#ce9fa7",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    alignSelf: "flex-start",
   },
 });

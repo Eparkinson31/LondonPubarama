@@ -1,3 +1,4 @@
+import BackEnd from "@/components/BackEnd";
 import { Picker } from "@react-native-picker/picker";
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -35,7 +36,7 @@ export default function Locations({
   };
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/alllocations")
+    fetch(`${BackEnd()}/alllocations`)
       .then((response) => response.json())
       .then((data) => {
         setLocations(data);

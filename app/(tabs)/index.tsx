@@ -1,3 +1,4 @@
+import BackEnd from "@/components/BackEnd";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
@@ -14,7 +15,7 @@ export default function DiscoverScreen() {
   );
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/structuredsuggestthirdplaces/6")
+    fetch(`${BackEnd()}/structuredsuggestthirdplaces/6`)
       .then((response) => response.json())
       .then((data) => {
         setSuggestions(data.suggestions);
