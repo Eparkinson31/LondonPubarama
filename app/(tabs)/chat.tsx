@@ -3,6 +3,7 @@ import BackEnd from "@/components/BackEnd";
 import { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
+import Markdown from "react-native-markdown-display";
 
 interface Message {
   role: string;
@@ -64,7 +65,11 @@ export default function AboutScreen() {
           if (item.role === "user") {
             return <Text style={styles.textuser}>{item.content}</Text>;
           }
-          return <Text style={styles.textchatbot}>{item.content}</Text>;
+          return (
+            <View style={styles.textchatbot}>
+              <Markdown>{item.content}</Markdown>
+            </View>
+          );
         }}
       />
       <TextInput

@@ -1,6 +1,7 @@
 import BackEnd from "@/components/BackEnd";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import MapView from "react-native-maps";
 
 interface Suggestion {
   id: number;
@@ -26,8 +27,7 @@ export default function DiscoverScreen() {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Discover My Third Spaces</Text>
+    <ScrollView style={styles.container}>
       {typeof suggestions === "string" ? (
         <Text style={styles.heading}>{suggestions}</Text>
       ) : (
@@ -39,15 +39,22 @@ export default function DiscoverScreen() {
           </View>
         ))
       )}
-    </View>
+
+      <MapView style={styles.map} />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  map: {
+    width: "90%",
+    height: "90%",
+    margin: 20,
+  },
   container: {
     flex: 1,
     backgroundColor: "#fffcf2",
-    paddingTop: 50,
+    paddingTop: 5,
   },
 
   heading: {
@@ -59,7 +66,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#6F6C43",
   },
@@ -84,11 +91,11 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor: "#F7F3E9",
-    borderWidth: 5,
+    borderWidth: 4,
     borderColor: "#bdcfd3",
-    padding: 20,
+    padding: 10,
     borderRadius: 20,
-    marginBottom: 15,
+    marginBottom: 5,
   },
   location: {
     fontSize: 16,
