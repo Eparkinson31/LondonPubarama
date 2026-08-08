@@ -1,13 +1,15 @@
 import BackEnd from "@/components/BackEnd";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 
 interface Suggestion {
   id: number;
   name: string;
   location: string;
   summary: string;
+  longitude: number;
+  latitude: number;
 }
 
 export default function DiscoverScreen() {
@@ -40,7 +42,29 @@ export default function DiscoverScreen() {
         ))
       )}
 
-      <MapView style={styles.map} />
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: 51.5074,
+          longitude: -0.1277,
+          latitudeDelta: 0.12, // Increased from 0.0922 to zoom out
+          longitudeDelta: 0.12,
+        }}
+      >
+        {typeof suggestions !== "string"
+          ? suggestions.map((suggestion) => (
+              <Marker
+                key={suggestion.id}
+                coordinate={{
+                  latitude: suggestion.latitude,
+                  longitude: suggestion.longitude,
+                }}
+                title={suggestion.name}
+                description={`${suggestion.location}\n${suggestion.summary}`}
+              />
+            ))
+          : null}
+      </MapView>
     </ScrollView>
   );
 }
