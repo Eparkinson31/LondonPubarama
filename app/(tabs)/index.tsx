@@ -47,8 +47,8 @@ export default function DiscoverScreen() {
         initialRegion={{
           latitude: 51.5074,
           longitude: -0.1277,
-          latitudeDelta: 0.12, // Increased from 0.0922 to zoom out
-          longitudeDelta: 0.12,
+          latitudeDelta: 0.05, // Increased from 0.0922 to zoom out
+          longitudeDelta: 0.05, // Increased from 0.0421 to zoom out
         }}
       >
         {typeof suggestions !== "string"

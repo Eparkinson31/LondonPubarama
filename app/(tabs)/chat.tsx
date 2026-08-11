@@ -1,7 +1,7 @@
 // Defines the screen/content for the about tab in app//
 import BackEnd from "@/components/BackEnd";
 import { useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Markdown from "react-native-markdown-display";
 
@@ -43,8 +43,9 @@ export default function AboutScreen() {
     if (messages.length === 0) {
       const firstMessage: Message = {
         role: "system",
-        content:
-          "You are a careful local assistant.,Never invent file contents.",
+        content: `You are a careful local assistant. 
+          If a user is mentioned with an '@' in the chat then read their profile. 
+          Keep in mind their preferences when recommending a pub. Never invent file contents.`,
       };
 
       const updatedMessages = [...messages, firstMessage, newMessage];
@@ -72,15 +73,21 @@ export default function AboutScreen() {
           );
         }}
       />
-      <TextInput
-        style={styles.TextInput}
-        placeholder="Ask your Third Place assistant..."
-        placeholderTextColor="#6F6C43"
-        value={prompt}
-        onChangeText={setPrompt}
-        returnKeyType="done" // Customises the keyboard button label
-        onSubmitEditing={(e) => addPrompt(e.nativeEvent.text)}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.TextInput}
+          placeholder="Ask your Third Place assistant..."
+          placeholderTextColor="#6F6C43"
+          value={prompt}
+          onChangeText={setPrompt}
+          returnKeyType="done"
+          onSubmitEditing={(e) => addPrompt(e.nativeEvent.text)}
+        />
+
+        <Pressable style={styles.sendButton} onPress={() => addPrompt(prompt)}>
+          <Text style={styles.sendButtonText}>Send</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -137,5 +144,24 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 16,
     width: "80%",
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "90%",
+    gap: 8,
+  },
+
+  sendButton: {
+    backgroundColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 11,
+    paddingHorizontal: 16,
+  },
+
+  sendButtonText: {
+    color: "#fffcf2",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
