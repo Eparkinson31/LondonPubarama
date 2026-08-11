@@ -26,6 +26,7 @@ interface Profile {
   location: string;
   friends: string[];
   features: string[];
+  image_url: string;
 }
 interface ProfileUpdate {
   id: number;
@@ -45,6 +46,7 @@ export default function ProfileScreen() {
     id: 0,
     friends: [],
     features: [],
+    image_url: "",
   });
 
   const Features = [
@@ -100,13 +102,42 @@ export default function ProfileScreen() {
     }
   };
 
-  const createProfile = () => {
+  const saveImage = async (image: string): Promise<string> => {
+    const formData = new FormData();
+    var url = "https://example.com/placeholder-image.jpg";
+    formData.append("savename", "profilepicture.jpg");
+    formData.append("mimetype", "image/jpeg");
+    formData.append("file", {
+      uri: image,
+      type: "image/jpeg",
+      name: "profilepicture.jpg",
+    } as any);
+
+    return fetch(`${BackEnd()}/profileuploadphoto`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+      },
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        url = data.fullPath;
+        return data.fullPath;
+      })
+      .catch((error) => {
+        console.error("Error uploading image:", error);
+        return url;
+      });
+  };
+
+  const createProfile = (updatedProfile: Profile) => {
     fetch(`${BackEnd()}/createprofile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(profile),
+      body: JSON.stringify(updatedProfile),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -118,10 +149,10 @@ export default function ProfileScreen() {
       });
   };
 
-  const updateProfile = () => {
+  const updateProfile = (updatedProfile: Profile) => {
     const profileupdate: ProfileUpdate = {
-      id: profile.id,
-      profile: profile,
+      id: updatedProfile.id,
+      profile: updatedProfile,
     };
     fetch(`${BackEnd()}/updateprofile`, {
       method: "PUT",
@@ -141,12 +172,16 @@ export default function ProfileScreen() {
   };
 
   const saveProfile = () => {
-    if (profile.id === 0) {
-      createProfile();
-    } else {
-      updateProfile();
-    }
-    setIsEditing(false);
+    saveImage(profileImage!).then((url) => {
+      const updatedProfile = { ...profile, image_url: url };
+      setProfile(updatedProfile);
+      if (updatedProfile.id === 0) {
+        createProfile(updatedProfile);
+      } else {
+        updateProfile(updatedProfile);
+      }
+      setIsEditing(false);
+    });
   };
 
   const editProfile = () => {

@@ -12,7 +12,7 @@ interface Message {
 
 export default function AboutScreen() {
   const [prompt, setPrompt] = useState("");
-
+  const [thinking, setThinking] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const getChat = async (newMessages: Message[]) => {
@@ -49,10 +49,12 @@ export default function AboutScreen() {
       };
 
       const updatedMessages = [...messages, firstMessage, newMessage];
-      getChat(updatedMessages);
+      setThinking(true);
+      getChat(updatedMessages).finally(() => setThinking(false));
     } else {
       const updatedMessages = [...messages, newMessage];
-      getChat(updatedMessages);
+      setThinking(true);
+      getChat(updatedMessages).finally(() => setThinking(false));
     }
   };
 
@@ -73,21 +75,33 @@ export default function AboutScreen() {
           );
         }}
       />
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.TextInput}
-          placeholder="Ask your Third Place assistant..."
-          placeholderTextColor="#6F6C43"
-          value={prompt}
-          onChangeText={setPrompt}
-          returnKeyType="done"
-          onSubmitEditing={(e) => addPrompt(e.nativeEvent.text)}
-        />
 
-        <Pressable style={styles.sendButton} onPress={() => addPrompt(prompt)}>
-          <Text style={styles.sendButtonText}>Send</Text>
-        </Pressable>
-      </View>
+      {thinking && (
+        <View style={styles.thinkingContainer}>
+          <Text>Thinking...</Text>
+        </View>
+      )}
+
+      {!thinking && (
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.TextInput}
+            placeholder="Ask your Third Place assistant..."
+            placeholderTextColor="#6F6C43"
+            value={prompt}
+            onChangeText={setPrompt}
+            returnKeyType="done"
+            onSubmitEditing={(e) => addPrompt(e.nativeEvent.text)}
+          />
+
+          <Pressable
+            style={styles.sendButton}
+            onPress={() => addPrompt(prompt)}
+          >
+            <Text style={styles.sendButtonText}>Send</Text>
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }
@@ -163,5 +177,18 @@ const styles = StyleSheet.create({
     color: "#fffcf2",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  thinkingContainer: {
+    maxWidth: "80%",
+    color: "#ce9fa7",
+    fontWeight: "bold",
+    borderRadius: 45,
+    padding: 20,
+    marginVertical: 4,
+    alignSelf: "flex-start",
+    backgroundColor: "#F7F3E9",
+    borderWidth: 2,
+    borderColor: "#ce9fa7",
+    marginLeft: 20,
   },
 });
