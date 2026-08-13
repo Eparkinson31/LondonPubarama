@@ -7,7 +7,7 @@ import Picture from "@/components/Picture2";
 import { ProgressBar } from "@/components/ProgressBar2";
 import ThirdPlaceName from "@/components/ThirdPlaceName";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 interface Features {
   tags: string[];
@@ -52,11 +52,7 @@ export default function Pubdex() {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: 40 }}
-      showsVerticalScrollIndicator={false}
-    >
+    <View style={styles.container}>
       {/* Tracker */}
       <ProgressBar progress={currentProgress} />
 
@@ -137,7 +133,7 @@ export default function Pubdex() {
           }}
         />
       )}
-    </ScrollView>
+    </View>
   );
 }
 

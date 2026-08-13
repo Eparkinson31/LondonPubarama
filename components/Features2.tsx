@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const features = {
   Beverages: [
@@ -107,7 +107,7 @@ export default function Features({
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       {/* Features */}
       <Text style={[styles.sectionTitle]}>Third Place Features</Text>
       <Text style={styles.sectionSubtitle}>
@@ -176,7 +176,7 @@ export default function Features({
           </Pressable>
         </View>
       )}
-    </View>
+    </ScrollView>
   );
 }
 
