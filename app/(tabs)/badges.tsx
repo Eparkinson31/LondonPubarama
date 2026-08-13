@@ -1,17 +1,23 @@
-import { StyleSheet, Text, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { StyleSheet, View } from "react-native";
 
 export default function ConfirmationScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Badges Tracker</Text>
-      <Text style={styles.text}>
-        Collect badges as you explore Third Places!
-      </Text>
-      <View style={styles.circlesContainer}>
-        <View style={styles.circle} />
-        <View style={styles.circle} />
-        <View style={styles.circle} />
-        <View style={styles.circle} />
+      <View style={styles.circle1}>
+        <Ionicons name="fast-food-outline" size={28} color="#fffcf2" />
+      </View>
+
+      <View style={styles.circle2}>
+        <Ionicons name="fast-food-outline" size={28} color="#fffcf2" />
+      </View>
+
+      <View style={styles.circle3}>
+        <Ionicons name="fast-food-outline" size={28} color="#fffcf2" />
+      </View>
+
+      <View style={styles.circle4}>
+        <Ionicons name="fast-food-outline" size={28} color="#fffcf2" />
       </View>
     </View>
   );
@@ -33,11 +39,40 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: 20,
   },
-  circle: {
+  circle1: {
     width: 50,
     height: 50,
     borderRadius: 25,
     backgroundColor: "#ce9fa7",
     marginHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  circle2: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#bdcfd3",
+    marginHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  circle3: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#6F6C43",
+    marginHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  circle4: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: "#b03924",
+    marginHorizontal: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

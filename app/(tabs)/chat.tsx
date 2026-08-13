@@ -70,7 +70,9 @@ export default function AboutScreen() {
           }
           return (
             <View style={styles.textchatbot}>
-              <Markdown>{item.content}</Markdown>
+              <Markdown style={{ body: { color: "#6F6C43" } }}>
+                {item.content}
+              </Markdown>
             </View>
           );
         }}
@@ -78,7 +80,7 @@ export default function AboutScreen() {
 
       {thinking && (
         <View style={styles.thinkingContainer}>
-          <Text>Thinking...</Text>
+          <Text style={{ color: "#6F6C43" }}>Thinking...</Text>
         </View>
       )}
 
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   },
   textchatbot: {
     maxWidth: "80%",
-    color: "#ce9fa7",
+    color: "#6F6C43",
     fontWeight: "bold",
     borderRadius: 45,
     padding: 20,
@@ -132,12 +134,12 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: "#F7F3E9",
     borderWidth: 2,
-    borderColor: "#ce9fa7",
+    borderColor: "#bdcfd3",
     marginLeft: 20,
   },
   textuser: {
     maxWidth: "80%",
-    color: "#ce9fa7",
+    color: "#6F6C43",
     fontWeight: "bold",
     borderRadius: 45,
     padding: 20,
@@ -145,7 +147,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     backgroundColor: "#bdcfd3",
     borderWidth: 2,
-    borderColor: "#ce9fa7",
+    borderColor: "#bdcfd3",
     marginLeft: 20,
   },
   TextInput: {
