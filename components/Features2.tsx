@@ -77,10 +77,12 @@ export default function Features({
   setCurrentProgress,
   styles,
   saveFeatureSelection,
+  cancel,
 }: {
   setCurrentProgress: (progress: number) => void;
   styles: any;
   saveFeatureSelection: (features: string[]) => void;
+  cancel: () => void;
 }) {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
 
@@ -173,6 +175,9 @@ export default function Features({
             onPress={() => saveFeatureSelection(selectedFeatures)}
           >
             <Text style={styles.nextButtonText}>Next</Text>
+          </Pressable>
+          <Pressable style={styles.cancelButton} onPress={() => cancel()}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
           </Pressable>
         </View>
       )}

@@ -5,10 +5,12 @@ export default function ThirdPlaceName({
   setCurrentProgress,
   styles,
   saveThirdPlaceName,
+  cancel,
 }: {
   setCurrentProgress: (progress: number) => void;
   styles: any;
   saveThirdPlaceName: (name: string) => void;
+  cancel: () => void;
 }) {
   const [thirdPlaceName, setThirdPlaceName] = useState("");
   const [isLinkVisible, setIsLinkVisible] = useState(false);
@@ -52,6 +54,9 @@ export default function ThirdPlaceName({
           <Text style={styles.nextButtonText}>Next</Text>
         </Pressable>
       )}
+      <Pressable style={styles.nextButton} onPress={() => cancel()}>
+        <Text style={styles.nextButtonText}>Cancel</Text>
+      </Pressable>
     </View>
   );
 }

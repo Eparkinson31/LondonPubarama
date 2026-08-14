@@ -37,9 +37,9 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="pubdex"
+          name="place"
           options={{
-            title: "Pubdex",
+            title: "Place",
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="add-circle-outline" color={color} size={size} />
             ),

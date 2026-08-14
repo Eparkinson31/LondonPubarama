@@ -6,9 +6,10 @@ import * as ImagePicker from "expo-image-picker";
 
 interface Props {
   setImageFullPath: (path: string) => void;
+  cancel: () => void;
 }
 
-export default function PhotoUpload({ setImageFullPath }: Props) {
+export default function PhotoUpload({ setImageFullPath, cancel }: Props) {
   const [asset, setAsset] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
   const pickPhoto = async () => {
@@ -64,6 +65,9 @@ export default function PhotoUpload({ setImageFullPath }: Props) {
           <Text style={styles.text}>Next</Text>
         </Pressable>
       )}
+      <Pressable style={styles.next} onPress={cancel}>
+        <Text style={styles.text}>Cancel</Text>
+      </Pressable>
     </View>
   );
 }

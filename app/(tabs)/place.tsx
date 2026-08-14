@@ -3,11 +3,10 @@ import Confirmation from "@/components/Confirmation2";
 import Features from "@/components/Features2";
 import Locations from "@/components/Locations2";
 import PhotoUpload from "@/components/PhotoUpload";
-import Picture from "@/components/Picture2";
 import { ProgressBar } from "@/components/ProgressBar2";
 import ThirdPlaceName from "@/components/ThirdPlaceName";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 interface Features {
   tags: string[];
@@ -25,12 +24,12 @@ interface SavedThirdPlace {
   image_url: string;
 }
 
-export default function Pubdex() {
+export default function Place() {
   const [savedThirdPlace, setSavedThirdPlace] = useState({} as SavedThirdPlace);
   const [currentProgress, setCurrentProgress] = useState(2);
 
   // Name of Page
-  const [currentPage, setCurrentPage] = useState("thirdPlaceName");
+  const [currentPage, setCurrentPage] = useState("PlaceMenu");
 
   const saveThirdPlace = (thirdPlace: SavedThirdPlace) => {
     // Save the third place to your database or state management
@@ -54,7 +53,27 @@ export default function Pubdex() {
   return (
     <View style={styles.container}>
       {/* Tracker */}
-      <ProgressBar progress={currentProgress} />
+      {currentPage !== "PlaceMenu" && (
+        <ProgressBar progress={currentProgress} />
+      )}
+
+      {/* Tracker */}
+      {currentPage === "PlaceMenu" && (
+        <View style={styles.container}>
+          <Pressable
+            style={[styles.createButton]}
+            onPress={() => setCurrentPage("thirdPlaceName")}
+          >
+            <Text style={styles.createButtonText}>Create new Third Place</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.createButton]}
+            onPress={() => setCurrentPage("thirdPlaceName")}
+          >
+            <Text style={styles.createButtonText}>Edit Third Place</Text>
+          </Pressable>
+        </View>
+      )}
 
       {/* Asking name of third place */}
       {currentPage === "thirdPlaceName" && (
@@ -64,6 +83,10 @@ export default function Pubdex() {
           saveThirdPlaceName={(name: string) => {
             setSavedThirdPlace({ ...savedThirdPlace, name });
             setCurrentPage("locations");
+          }}
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("PlaceMenu");
           }}
         />
       )}
@@ -76,6 +99,10 @@ export default function Pubdex() {
           saveLocationName={(location: string) => {
             setSavedThirdPlace({ ...savedThirdPlace, location: location });
             setCurrentPage("features");
+          }}
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("PlaceMenu");
           }}
         />
       )}
@@ -92,20 +119,9 @@ export default function Pubdex() {
             });
             setCurrentPage("picture");
           }}
-        />
-      )}
-
-      {/* Asking for a picture */}
-      {currentPage === "old picture" && (
-        <Picture
-          setCurrentProgress={setCurrentProgress}
-          styles={styles}
-          saveSelectedImage={(image_url: string) => {
-            const thirdplace = { ...savedThirdPlace, image_url: image_url };
-            setSavedThirdPlace(thirdplace);
-            saveThirdPlace(thirdplace);
-            setCurrentPage("confirmation");
-            setCurrentProgress(100);
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("PlaceMenu");
           }}
         />
       )}
@@ -120,6 +136,10 @@ export default function Pubdex() {
             setCurrentPage("confirmation");
             setCurrentProgress(100);
           }}
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("PlaceMenu");
+          }}
         />
       )}
 
@@ -129,7 +149,7 @@ export default function Pubdex() {
           styles={styles}
           okay={() => {
             setCurrentProgress(2);
-            setCurrentPage("thirdPlaceName");
+            setCurrentPage("PlaceMenu");
           }}
         />
       )}
@@ -290,6 +310,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   cancelButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  createButton: {
+    width: 300,
+    height: 40,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  createButtonText: {
     color: "#FFFCF2",
     fontSize: 16,
     fontWeight: "600",

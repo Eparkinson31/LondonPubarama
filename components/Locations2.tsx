@@ -1,6 +1,5 @@
 import { AutocompleteInput, ItemData } from "@/components/AutocompleteInput";
 import BackEnd from "@/components/BackEnd";
-import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -16,10 +15,12 @@ export default function Locations({
   setCurrentProgress,
   styles,
   saveLocationName,
+  cancel,
 }: {
   setCurrentProgress: (progress: number) => void;
   styles: any;
   saveLocationName: (location: string) => void;
+  cancel: () => void;
 }) {
   const [location, setLocation] = useState("");
   const [isLinkVisible, setIsLinkVisible] = useState(false);
@@ -93,11 +94,14 @@ export default function Locations({
           <Text style={styles.nextButtonText}>Next</Text>
         </Pressable>
       )}
-      <Link href="/" asChild>
-        <Pressable style={styles.cancelButton}>
-          <Text style={styles.cancelButtonText}>Cancel</Text>
-        </Pressable>
-      </Link>
+      <Pressable
+        style={styles.cancelButton}
+        onPress={() => {
+          cancel();
+        }}
+      >
+        <Text style={styles.cancelButtonText}>Cancel</Text>
+      </Pressable>
     </View>
   );
 }
