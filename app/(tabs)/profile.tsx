@@ -1,17 +1,12 @@
 import BackEnd from "@/components/BackEnd";
-import { Picker } from "@react-native-picker/picker";
+import Features from "@/components/Features2";
+import Locations from "@/components/Locations2";
+import PhotoUpload from "@/components/PhotoUpload";
+import { ProgressBar } from "@/components/ProgressBar2";
+import ThirdPlaceName from "@/components/ThirdPlaceName";
 import * as ImagePicker from "expo-image-picker";
 import { useEffect, useState } from "react";
-import {
-  Image,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 interface Location {
   city: string;
   created_at: string;
@@ -39,6 +34,12 @@ export default function ProfileScreen() {
   const [isEditing, setIsEditing] = useState(false);
   const [locations, setLocations] = useState<Location[]>([]);
   const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [currentProgress, setCurrentProgress] = useState(2);
+  const [uri, setUri] = useState("");
+
+  // Name of Page
+  const [currentPage, setCurrentPage] = useState("profileMenu");
+
   const [profile, setProfile] = useState<Profile>({
     name: "",
     location: "",
@@ -49,7 +50,7 @@ export default function ProfileScreen() {
     image_url: "",
   });
 
-  const Features = [
+  const OldFeatures = [
     "Traditional Pub",
     "Craft Beer",
     "Real Ale",
@@ -171,17 +172,14 @@ export default function ProfileScreen() {
       });
   };
 
-  const saveProfile = () => {
-    saveImage(profileImage!).then((url) => {
-      const updatedProfile = { ...profile, image_url: url };
-      setProfile(updatedProfile);
-      if (updatedProfile.id === 0) {
-        createProfile(updatedProfile);
-      } else {
-        updateProfile(updatedProfile);
-      }
-      setIsEditing(false);
-    });
+  const saveProfile = (updatedProfile: Profile) => {
+    setProfile(updatedProfile);
+    if (updatedProfile.id === 0) {
+      createProfile(updatedProfile);
+    } else {
+      updateProfile(updatedProfile);
+    }
+    setIsEditing(false);
   };
 
   const editProfile = () => {
@@ -230,104 +228,108 @@ export default function ProfileScreen() {
   }, []);
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={{ paddingBottom: 50 }}
-    >
-      <View style={styles.header}>
-        <View style={styles.profilePicContainer}>
-          <Pressable onPress={pickImageAsync}>
-            <Image
-              source={
-                profileImage
-                  ? { uri: profileImage }
-                  : require("../../assets/profilepicillustration.jpg")
-              }
-              style={styles.profilePic}
-            />
-          </Pressable>
+    <View style={styles.container}>
+      {/* Tracker */}
+      {currentPage !== "profileMenu" && currentPage !== "confirmation" && (
+        <ProgressBar progress={currentProgress} />
+      )}
 
-          <Pressable style={styles.editPhotoButton} onPress={pickImageAsync}>
-            <Text style={styles.editPhotoText}>+</Text>
+      {/* Tracker */}
+      {currentPage === "profileMenu" && (
+        <View style={styles.container}>
+          <Pressable
+            style={[styles.createButton]}
+            onPress={() => setCurrentPage("profileName")}
+          >
+            <Text style={styles.createButtonText}>Create New Profile</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.createButton]}
+            onPress={() => setCurrentPage("profileName")}
+          >
+            <Text style={styles.createButtonText}>Edit Profile</Text>
           </Pressable>
         </View>
+      )}
 
-        <View style={styles.infoContainer}>
-          {isEditing ? (
-            <>
-              <TextInput
-                style={styles.nameInput}
-                placeholder="Enter Name"
-                placeholderTextColor="#6F6C43"
-                value={profile.name}
-                onChangeText={setProfileName}
-              />
+      {currentPage === "profileName" && (
+        <ThirdPlaceName
+          setCurrentProgress={setCurrentProgress}
+          styles={styles}
+          saveThirdPlaceName={(name: string) => {
+            setProfileName(name);
+            setCurrentPage("locations");
+          }}
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("profileMenu");
+          }}
+          label="Add Profile Name"
+        />
+      )}
 
-              <View style={styles.pickerContainer}>
-                <Picker
-                  selectedValue={profile.location}
-                  onValueChange={(itemValue) =>
-                    setProfileLocation(String(itemValue))
-                  }
-                >
-                  <Picker.Item label="Select your London area" value="" />
+      {currentPage === "locations" && (
+        <Locations
+          setCurrentProgress={setCurrentProgress}
+          styles={styles}
+          saveLocationName={(location: string) => {
+            setProfileLocation(location);
+            setCurrentPage("features");
+          }}
+          label="Add Profile Location"
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("profileMenu");
+          }}
+        />
+      )}
 
-                  {locations.map((location, index) => (
-                    <Picker.Item
-                      key={index}
-                      label={location.location}
-                      value={location.location}
-                    />
-                  ))}
-                </Picker>
-              </View>
-            </>
-          ) : (
-            <>
-              <Text style={styles.name}>
-                {profile.name || "No name entered"}
-              </Text>
+      {/* Asking for features */}
+      {currentPage === "features" && (
+        <Features
+          setCurrentProgress={setCurrentProgress}
+          styles={styles}
+          saveFeatureSelection={(features: string[]) => {
+            setProfile((prevProfile) => ({
+              ...prevProfile,
+              features: features,
+            }));
+            setCurrentPage("picture");
+          }}
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("profileMenu");
+          }}
+        />
+      )}
 
-              <Text style={styles.location}>
-                {profile.location || "No location selected"}
-              </Text>
-            </>
-          )}
-        </View>
-      </View>
-      {/* Displays the preferences section of the profile, showing either editable chips
-        for selecting preferences or static chips displaying the selected preferences, 
-        depending on whether the user is in editing mode or not. The togglePreference 
-        function is used to add or remove preferences from the selectedPreferences state 
-        when a chip is pressed. */}
-      <View style={styles.preferencesContainer}>
-        <Text style={styles.sectionTitle}>Preferences</Text>
+      {/* Asking for a picture */}
+      {currentPage === "picture" && (
+        <PhotoUpload
+          setImageFullPath={(image_url: string, uri: string) => {
+            const newprofile = { ...profile, image_url: image_url };
+            setProfile(newprofile);
+            saveProfile(newprofile);
+            setCurrentPage("confirmation");
+            setCurrentProgress(100);
+            setUri(uri);
+          }}
+          setCurrentProgress={setCurrentProgress}
+          cancel={() => {
+            setCurrentProgress(2);
+            setCurrentPage("profileMenu");
+          }}
+        />
+      )}
 
-        {isEditing ? (
-          <View style={styles.chipsContainer}>
-            {Features.map((feature) => (
-              <Pressable
-                key={feature}
-                onPress={() => toggleFeatures(feature)}
-                style={[
-                  styles.preferenceChip,
-                  profile.features.includes(feature) &&
-                    styles.selectedFeatureChip,
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.preferenceText,
-                    profile.features.includes(feature) &&
-                      styles.selectedFeatureText,
-                  ]}
-                >
-                  {feature}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        ) : (
+      {/* Confirmation */}
+      {currentPage === "confirmation" && (
+        <View>
+          <Text style={styles.name}>{profile.name || "No name entered"}</Text>
+
+          <Text style={styles.location}>
+            {profile.location || "No location selected"}
+          </Text>
           <View style={styles.chipsContainer}>
             {profile.features.length > 0 ? (
               profile.features.map((feature) => (
@@ -339,25 +341,19 @@ export default function ProfileScreen() {
               <Text style={styles.location}>No preferences selected</Text>
             )}
           </View>
-        )}
-      </View>
-
-      {isEditing ? (
-        <Pressable
-          style={styles.editprofilebutton}
-          onPress={() => saveProfile()}
-        >
-          <Text style={styles.buttonText}>{"Save Profile"}</Text>
-        </Pressable>
-      ) : (
-        <Pressable
-          style={styles.editprofilebutton}
-          onPress={() => editProfile()}
-        >
-          <Text style={styles.buttonText}>{"Edit Profile"}</Text>
-        </Pressable>
+          <View style={styles.profilePicContainer}>
+            <Image
+              source={
+                uri
+                  ? { uri: uri }
+                  : require("../../assets/profilepicillustration.jpg")
+              }
+              style={styles.profilePic}
+            />
+          </View>
+        </View>
       )}
-    </ScrollView>
+    </View>
   );
 }
 
@@ -440,10 +436,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 
-  preferencesContainer: {
-    marginTop: 30,
-  },
-
   sectionTitle: {
     fontSize: 22,
     fontWeight: "bold",
@@ -494,5 +486,89 @@ const styles = StyleSheet.create({
     color: "#fffcf2",
     fontWeight: "bold",
     fontSize: 16,
+  },
+  createButton: {
+    width: 300,
+    height: 40,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  createButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  cancelButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#b03924",
+    borderWidth: 1,
+    borderColor: "#b03924",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 40,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  nextButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  nextButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#bdcfd3",
+    paddingHorizontal: 16,
+    marginBottom: 24,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
+  },
+
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "#6F6C43",
+    paddingVertical: 14,
   },
 });

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import {
-    FlatList,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 // 1. Define types for the items and component props
@@ -31,6 +31,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
 
   // 2. Filter data as the user types
   const handleSearch = (text: string) => {
+    console.log("User typed:", text);
     setQuery(text);
     if (text.trim() === "") {
       setFilteredData([]);
@@ -38,6 +39,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       const filtered = data.filter((item) =>
         item.name.toLowerCase().includes(text.toLowerCase()),
       );
+      console.log("Filtered results:", filtered);
       setFilteredData(filtered);
     }
   };

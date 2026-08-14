@@ -5,11 +5,16 @@ import BackEnd from "@/components/BackEnd";
 import * as ImagePicker from "expo-image-picker";
 
 interface Props {
-  setImageFullPath: (path: string) => void;
+  setImageFullPath: (path: string, uri: string) => void;
   cancel: () => void;
+  setCurrentProgress: (progress: number) => void;
 }
 
-export default function PhotoUpload({ setImageFullPath, cancel }: Props) {
+export default function PhotoUpload({
+  setImageFullPath,
+  cancel,
+  setCurrentProgress,
+}: Props) {
   const [asset, setAsset] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
   const pickPhoto = async () => {
@@ -41,8 +46,8 @@ export default function PhotoUpload({ setImageFullPath, cancel }: Props) {
     });
 
     const data = await response.json();
-
-    setImageFullPath(data.fullPath);
+    setCurrentProgress(99);
+    setImageFullPath(data.fullPath, asset.uri);
   };
 
   return (
@@ -62,7 +67,7 @@ export default function PhotoUpload({ setImageFullPath, cancel }: Props) {
 
       {asset && (
         <Pressable style={styles.next} onPress={uploadPhoto}>
-          <Text style={styles.text}>Next</Text>
+          <Text style={styles.text}>Save</Text>
         </Pressable>
       )}
       <Pressable style={styles.next} onPress={cancel}>

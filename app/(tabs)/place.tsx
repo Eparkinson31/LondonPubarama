@@ -84,6 +84,7 @@ export default function Place() {
             setSavedThirdPlace({ ...savedThirdPlace, name });
             setCurrentPage("locations");
           }}
+          label="Add Third Place Name"
           cancel={() => {
             setCurrentProgress(2);
             setCurrentPage("PlaceMenu");
@@ -100,6 +101,7 @@ export default function Place() {
             setSavedThirdPlace({ ...savedThirdPlace, location: location });
             setCurrentPage("features");
           }}
+          label="Add Third Place Location"
           cancel={() => {
             setCurrentProgress(2);
             setCurrentPage("PlaceMenu");
@@ -129,13 +131,14 @@ export default function Place() {
       {/* Asking for a picture */}
       {currentPage === "picture" && (
         <PhotoUpload
-          setImageFullPath={(image_url: string) => {
+          setImageFullPath={(image_url: string, uri: string) => {
             const thirdplace = { ...savedThirdPlace, image_url: image_url };
             setSavedThirdPlace(thirdplace);
             saveThirdPlace(thirdplace);
             setCurrentPage("confirmation");
             setCurrentProgress(100);
           }}
+          setCurrentProgress={setCurrentProgress}
           cancel={() => {
             setCurrentProgress(2);
             setCurrentPage("PlaceMenu");
@@ -333,5 +336,13 @@ const styles = StyleSheet.create({
     color: "#FFFCF2",
     fontSize: 16,
     fontWeight: "600",
+  },
+  pickerContainer: {
+    backgroundColor: "#fffcf2",
+    borderWidth: 2,
+    borderColor: "#6F6C43",
+    borderRadius: 12,
+    overflow: "hidden",
+    marginTop: 10,
   },
 });

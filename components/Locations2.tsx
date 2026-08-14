@@ -16,11 +16,13 @@ export default function Locations({
   styles,
   saveLocationName,
   cancel,
+  label,
 }: {
   setCurrentProgress: (progress: number) => void;
   styles: any;
   saveLocationName: (location: string) => void;
   cancel: () => void;
+  label: string;
 }) {
   const [location, setLocation] = useState("");
   const [isLinkVisible, setIsLinkVisible] = useState(false);
@@ -47,6 +49,7 @@ export default function Locations({
           name: location.location,
         }));
         setItemData(itemDataArray);
+        //console.log("Fetched locations:", itemDataArray);
       })
       .catch((error) => {
         console.error(error);
@@ -61,30 +64,13 @@ export default function Locations({
   return (
     <View style={styles.container}>
       {/* Location */}
-      <View style={styles.pickerContainer}>
-        <Text style={styles.sectionTitle}>Add Third Place Location</Text>
+      <View>
+        <Text style={styles.sectionTitle}>{label}</Text>
         <AutocompleteInput
           data={itemData}
           placeholder="Type Location..."
           onSelect={handleSelection}
         />
-        {/*<Picker
-          selectedValue={location}
-          onValueChange={(itemValue) => validateLocation(String(itemValue))}
-        >
-          <Picker.Item
-            label="Select the area where the pub is located"
-            value=""
-          />
-
-          {locations.map((location, index) => (
-            <Picker.Item
-              key={index}
-              label={location.location}
-              value={location.location}
-            />
-          ))}
-        </Picker> */}
       </View>
       {isLinkVisible && (
         <Pressable

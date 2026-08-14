@@ -6,11 +6,13 @@ export default function ThirdPlaceName({
   styles,
   saveThirdPlaceName,
   cancel,
+  label,
 }: {
   setCurrentProgress: (progress: number) => void;
   styles: any;
   saveThirdPlaceName: (name: string) => void;
   cancel: () => void;
+  label: string;
 }) {
   const [thirdPlaceName, setThirdPlaceName] = useState("");
   const [isLinkVisible, setIsLinkVisible] = useState(false);
@@ -32,12 +34,12 @@ export default function ThirdPlaceName({
       // showsVerticalScrollIndicator={false}
     >
       {/* Add Third Place Name */}
-      <Text style={styles.sectionTitle}>Add Third Place Name</Text>
+      <Text style={styles.sectionTitle}>{label}</Text>
 
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Third place name..."
+          placeholder={label}
           placeholderTextColor="#9B9B9B"
           value={thirdPlaceName}
           onChangeText={validateThirdPlaceName}
@@ -54,8 +56,8 @@ export default function ThirdPlaceName({
           <Text style={styles.nextButtonText}>Next</Text>
         </Pressable>
       )}
-      <Pressable style={styles.nextButton} onPress={() => cancel()}>
-        <Text style={styles.nextButtonText}>Cancel</Text>
+      <Pressable style={styles.cancelButton} onPress={() => cancel()}>
+        <Text style={styles.cancelButtonText}>Cancel</Text>
       </Pressable>
     </View>
   );
