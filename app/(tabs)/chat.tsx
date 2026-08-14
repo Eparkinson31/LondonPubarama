@@ -25,7 +25,7 @@ export default function AboutScreen() {
 
   const getChat = async (newMessages: Message[]) => {
     try {
-      const response = await fetch(`${BackEnd()}/chat`, {
+      const response = await fetch(`${BackEnd()}/chat/6`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,13 +51,7 @@ export default function AboutScreen() {
     if (messages.length === 0) {
       const firstMessage: Message = {
         role: "system",
-        content: `You are a careful local assistant. 
-          You are helping a user answer questions.
-          You can use the information in the wiki to help answer questions.
-          You are only querying the wiki for information. You are not making up information.
-          You are not maintaining the wiki.
-          If a user is mentioned with an '@' in the chat then read their profile. 
-          Keep in mind their preferences when recommending a pub. Never invent file contents.`,
+        content: "NEW",
       };
 
       const updatedMessages = [...messages, firstMessage, newMessage];
