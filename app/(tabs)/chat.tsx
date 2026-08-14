@@ -1,7 +1,15 @@
 // Defines the screen/content for the about tab in app//
 import BackEnd from "@/components/BackEnd";
 import { useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { TextInput } from "react-native-gesture-handler";
 import Markdown from "react-native-markdown-display";
 
@@ -44,6 +52,10 @@ export default function AboutScreen() {
       const firstMessage: Message = {
         role: "system",
         content: `You are a careful local assistant. 
+          You are helping a user answer questions.
+          You can use the information in the wiki to help answer questions.
+          You are only querying the wiki for information. You are not making up information.
+          You are not maintaining the wiki.
           If a user is mentioned with an '@' in the chat then read their profile. 
           Keep in mind their preferences when recommending a pub. Never invent file contents.`,
       };
@@ -59,7 +71,11 @@ export default function AboutScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 128 : 0}
+    >
       <FlatList
         inverted
         style={styles.containerlist}
@@ -104,7 +120,7 @@ export default function AboutScreen() {
           </Pressable>
         </View>
       )}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 //Defines the about screen//
