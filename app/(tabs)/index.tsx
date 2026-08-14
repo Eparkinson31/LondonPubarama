@@ -10,6 +10,7 @@ interface Suggestion {
   summary: string;
   longitude: number;
   latitude: number;
+  address: string;
 }
 
 export default function DiscoverScreen() {
@@ -36,7 +37,7 @@ export default function DiscoverScreen() {
         suggestions.map((suggestion) => (
           <View key={suggestion.id} style={styles.card}>
             <Text style={styles.title}>{suggestion.name}</Text>
-            <Text style={styles.location}>{suggestion.location}</Text>
+            <Text style={styles.location}>{suggestion.address}</Text>
             <Text style={styles.summary}>{suggestion.summary}</Text>
           </View>
         ))
@@ -60,7 +61,7 @@ export default function DiscoverScreen() {
                   longitude: suggestion.longitude,
                 }}
                 title={suggestion.name}
-                description={`${suggestion.location}\n${suggestion.summary}`}
+                description={`${suggestion.address}`}
               />
             ))
           : null}
@@ -122,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   location: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#ce9fa7",
   },
   summary: {
