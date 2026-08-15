@@ -89,8 +89,11 @@ export default function AboutScreen() {
       />
 
       {thinking && (
-        <View style={styles.thinkingContainer}>
-          <Text style={{ color: "#6F6C43" }}>Thinking...</Text>
+        <View>
+          <Text style={styles.textuser}>{prompt}</Text>
+          <View style={styles.thinkingContainer}>
+            <Text style={{ color: "#6F6C43" }}>Thinking...</Text>
+          </View>
         </View>
       )}
 
