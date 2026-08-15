@@ -78,11 +78,13 @@ export default function Features({
   styles,
   saveFeatureSelection,
   cancel,
+  label,
 }: {
   setCurrentProgress: (progress: number) => void;
   styles: any;
   saveFeatureSelection: (features: string[]) => void;
   cancel: () => void;
+  label: string;
 }) {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
 
@@ -111,10 +113,10 @@ export default function Features({
   return (
     <ScrollView style={styles.container}>
       {/* Features */}
-      <Text style={[styles.sectionTitle]}>Third Place Features</Text>
-      <Text style={styles.sectionSubtitle}>
-        Please select the features that apply to your Third Place:
-      </Text>
+      <Text style={[styles.sectionTitle]}>{label}</Text>
+      {/* <Text style={styles.sectionSubtitle}>
+        Please select all that apply. You can select multiple features.
+      </Text> */}
 
       <View style={featurestyles.tabsContainer}>
         {Object.keys(features).map((category) => (

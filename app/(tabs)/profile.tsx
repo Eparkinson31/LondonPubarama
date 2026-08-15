@@ -296,6 +296,7 @@ export default function ProfileScreen() {
             }));
             setCurrentPage("picture");
           }}
+          label="Press on features that you enjoy about third places"
           cancel={() => {
             setCurrentProgress(2);
             setCurrentPage("profileMenu");
@@ -361,7 +362,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fffcf2",
-    paddingTop: 50,
+    paddingTop: 20,
     paddingHorizontal: 20,
   },
 
@@ -440,7 +441,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     color: "#6F6C43",
-    marginBottom: 12,
+    marginBottom: 10,
+    marginTop: 0,
   },
 
   chipsContainer: {

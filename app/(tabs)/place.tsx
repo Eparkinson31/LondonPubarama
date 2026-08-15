@@ -121,6 +121,7 @@ export default function Place() {
             });
             setCurrentPage("picture");
           }}
+          label="Add features about this third place"
           cancel={() => {
             setCurrentProgress(2);
             setCurrentPage("PlaceMenu");

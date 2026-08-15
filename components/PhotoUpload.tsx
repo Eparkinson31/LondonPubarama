@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 import BackEnd from "@/components/BackEnd";
 import * as ImagePicker from "expo-image-picker";
@@ -62,16 +62,17 @@ export default function PhotoUpload({
           </View>
         )}
       </View>
-
-      <Button title="Choose Photo" onPress={pickPhoto} />
-
       {asset && (
-        <Pressable style={styles.next} onPress={uploadPhoto}>
-          <Text style={styles.text}>Save</Text>
+        <Pressable style={styles.savebutton} onPress={uploadPhoto}>
+          <Text style={styles.savetext}>Save</Text>
         </Pressable>
       )}
-      <Pressable style={styles.next} onPress={cancel}>
-        <Text style={styles.text}>Cancel</Text>
+      <Pressable style={styles.chooseButton} onPress={pickPhoto}>
+        <Text style={styles.chooseButtonText}>Choose Photo</Text>
+      </Pressable>
+
+      <Pressable style={styles.cancelButton} onPress={cancel}>
+        <Text style={styles.cancelButtonText}>Cancel</Text>
       </Pressable>
     </View>
   );
@@ -84,25 +85,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  image: {
-    width: 300,
-    height: 300,
-    resizeMode: "contain",
-    marginBottom: 20,
-  },
-
-  next: {
+  savebutton: {
     marginTop: 20,
+    width: 90,
+    height: 40,
     backgroundColor: "#6F6C43",
-    paddingHorizontal: 30,
-    paddingVertical: 12,
     borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
-  text: {
+  savetext: {
     color: "#fff",
     fontWeight: "600",
-    fontSize: 18,
+    fontSize: 16,
   },
   previewContainer: {
     width: 300,
@@ -131,5 +131,47 @@ const styles = StyleSheet.create({
   placeholderText: {
     color: "#888",
     fontSize: 16,
+  },
+
+  cancelButton: {
+    width: 90,
+    height: 40,
+    backgroundColor: "#b03924",
+    borderWidth: 1,
+    borderColor: "#b03924",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cancelButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  chooseButton: {
+    width: 140,
+    height: 40,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  chooseButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });

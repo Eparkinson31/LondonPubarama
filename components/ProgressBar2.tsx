@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 8,
+
     color: "#6F6C43", // Modern neutral text color
   },
   track: {
