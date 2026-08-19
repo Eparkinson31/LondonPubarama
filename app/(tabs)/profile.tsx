@@ -4,9 +4,18 @@ import Locations from "@/components/Locations2";
 import PhotoUpload from "@/components/PhotoUpload";
 import { ProgressBar } from "@/components/ProgressBar2";
 import ThirdPlaceName from "@/components/ThirdPlaceName";
-import * as ImagePicker from "expo-image-picker";
+import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import Svg, { Polygon } from "react-native-svg";
+
 interface Location {
   city: string;
   created_at: string;
@@ -14,6 +23,7 @@ interface Location {
   location: string;
   postal_code: string;
 }
+
 interface Profile {
   created_at: string;
   id: number;
@@ -23,21 +33,17 @@ interface Profile {
   features: string[];
   image_url: string;
 }
+
 interface ProfileUpdate {
   id: number;
   profile: Profile;
 }
 
 export default function ProfileScreen() {
-  //const [name, setName] = useState("");
-  //const [location, setLocation] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
   const [locations, setLocations] = useState<Location[]>([]);
-  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [currentProgress, setCurrentProgress] = useState(2);
   const [uri, setUri] = useState("");
 
-  // Name of Page
   const [currentPage, setCurrentPage] = useState("profileMenu");
 
   const [profile, setProfile] = useState<Profile>({
@@ -90,48 +96,6 @@ export default function ProfileScreen() {
     "Wheelchair Accessible",
   ];
 
-  // List of preferences for users to select from when editing their profile//
-  const pickImageAsync = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
-    }
-  };
-
-  const saveImage = async (image: string): Promise<string> => {
-    const formData = new FormData();
-    var url = "https://example.com/placeholder-image.jpg";
-    formData.append("savename", "profilepicture.jpg");
-    formData.append("mimetype", "image/jpeg");
-    formData.append("file", {
-      uri: image,
-      type: "image/jpeg",
-      name: "profilepicture.jpg",
-    } as any);
-
-    return fetch(`${BackEnd()}/profileuploadphoto`, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-      },
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        url = data.fullPath;
-        return data.fullPath;
-      })
-      .catch((error) => {
-        console.error("Error uploading image:", error);
-        return url;
-      });
-  };
-
   const createProfile = (updatedProfile: Profile) => {
     fetch(`${BackEnd()}/createprofile`, {
       method: "POST",
@@ -142,7 +106,6 @@ export default function ProfileScreen() {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Handle the response data if needed
         setProfile(data);
       })
       .catch((error) => {
@@ -155,6 +118,7 @@ export default function ProfileScreen() {
       id: updatedProfile.id,
       profile: updatedProfile,
     };
+
     fetch(`${BackEnd()}/updateprofile`, {
       method: "PUT",
       headers: {
@@ -164,7 +128,6 @@ export default function ProfileScreen() {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Handle the response data if needed
         setProfile(data);
       })
       .catch((error) => {
@@ -174,16 +137,12 @@ export default function ProfileScreen() {
 
   const saveProfile = (updatedProfile: Profile) => {
     setProfile(updatedProfile);
+
     if (updatedProfile.id === 0) {
       createProfile(updatedProfile);
     } else {
       updateProfile(updatedProfile);
     }
-    setIsEditing(false);
-  };
-
-  const editProfile = () => {
-    setIsEditing(true);
   };
 
   const setProfileName = (name: string) => {
@@ -200,22 +159,6 @@ export default function ProfileScreen() {
     }));
   };
 
-  const toggleFeatures = (feature: string) => {
-    if (profile.features.includes(feature)) {
-      setProfile((prevProfile) => ({
-        ...prevProfile,
-        features: prevProfile.features.filter((item) => item !== feature),
-      }));
-    } else {
-      setProfile((prevProfile) => ({
-        ...prevProfile,
-        features: [...prevProfile.features, feature],
-      }));
-    }
-  };
-
-  // UseEffect hook fetches the list of London areas from the backend API when the component mounts and stores
-  // it in the areas state variable, which is then used to populate the location picker in the profile editing form.
   useEffect(() => {
     fetch(`${BackEnd()}/alllocations`)
       .then((response) => response.json())
@@ -229,22 +172,23 @@ export default function ProfileScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Tracker */}
+      {/* Progress bar */}
       {currentPage !== "profileMenu" && currentPage !== "confirmation" && (
         <ProgressBar progress={currentProgress} />
       )}
 
-      {/* Tracker */}
+      {/* Profile menu */}
       {currentPage === "profileMenu" && (
-        <View style={styles.container}>
+        <View style={styles.placeMenuButtons}>
           <Pressable
-            style={[styles.createButton]}
+            style={styles.placeMenuButton}
             onPress={() => setCurrentPage("profileName")}
           >
             <Text style={styles.createButtonText}>Create New Profile</Text>
           </Pressable>
+
           <Pressable
-            style={[styles.createButton]}
+            style={styles.editPlaceButton}
             onPress={() => setCurrentPage("profileName")}
           >
             <Text style={styles.createButtonText}>Edit Profile</Text>
@@ -252,6 +196,7 @@ export default function ProfileScreen() {
         </View>
       )}
 
+      {/* Profile name */}
       {currentPage === "profileName" && (
         <ThirdPlaceName
           setCurrentProgress={setCurrentProgress}
@@ -268,6 +213,7 @@ export default function ProfileScreen() {
         />
       )}
 
+      {/* Profile location */}
       {currentPage === "locations" && (
         <Locations
           setCurrentProgress={setCurrentProgress}
@@ -284,7 +230,7 @@ export default function ProfileScreen() {
         />
       )}
 
-      {/* Asking for features */}
+      {/* Profile features */}
       {currentPage === "features" && (
         <Features
           setCurrentProgress={setCurrentProgress}
@@ -294,6 +240,7 @@ export default function ProfileScreen() {
               ...prevProfile,
               features: features,
             }));
+
             setCurrentPage("picture");
           }}
           label="Press on features that you enjoy about third places"
@@ -304,16 +251,21 @@ export default function ProfileScreen() {
         />
       )}
 
-      {/* Asking for a picture */}
+      {/* Profile picture */}
       {currentPage === "picture" && (
         <PhotoUpload
           setImageFullPath={(image_url: string, uri: string) => {
-            const newprofile = { ...profile, image_url: image_url };
+            const newprofile = {
+              ...profile,
+              image_url: image_url,
+            };
+
             setProfile(newprofile);
             saveProfile(newprofile);
+
+            setUri(uri);
             setCurrentPage("confirmation");
             setCurrentProgress(100);
-            setUri(uri);
           }}
           setCurrentProgress={setCurrentProgress}
           cancel={() => {
@@ -323,14 +275,68 @@ export default function ProfileScreen() {
         />
       )}
 
-      {/* Confirmation */}
+      {/* Profile page */}
       {currentPage === "confirmation" && (
-        <View>
-          <Text style={styles.name}>{profile.name || "No name entered"}</Text>
+        <ScrollView
+          style={styles.profilePage}
+          contentContainerStyle={styles.profileContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Profile header */}
+          <View style={styles.profileHeader}>
+            {/* Profile picture */}
+            <View style={styles.profilePicContainer}>
+              <Image
+                source={
+                  uri
+                    ? { uri: uri }
+                    : require("../../assets/profilepicillustration.jpg")
+                }
+                style={styles.profilePic}
+              />
+            </View>
 
+            {/* Name and statistics */}
+            <View style={styles.profileInfo}>
+              <Text style={styles.name}>
+                {profile.name || "No name entered"}
+              </Text>
+
+              <View style={styles.statsContainer}>
+                <View style={styles.stat}>
+                  <Text style={styles.statNumber}>5</Text>
+                  <Text style={styles.statLabel}>Third Places</Text>
+                </View>
+
+                <View style={styles.stat}>
+                  <Text style={styles.statNumber}>1</Text>
+                  <Text style={styles.statLabel}>Badges</Text>
+                </View>
+
+                <View style={styles.stat}>
+                  <Text style={styles.statNumber}>7</Text>
+                  <Text style={styles.statLabel}>Friends</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* Location */}
           <Text style={styles.location}>
             {profile.location || "No location selected"}
           </Text>
+
+          {/* Edit profile */}
+          <Pressable
+            style={styles.editProfileButton}
+            onPress={() => setCurrentPage("profileName")}
+          >
+            <Text style={styles.editProfileButtonText}>Edit Profile</Text>
+          </Pressable>
+
+          {/* Preferences */}
+          <Text style={styles.preferencesTitle}>My Preferences</Text>
+
           <View style={styles.chipsContainer}>
             {profile.features.length > 0 ? (
               profile.features.map((feature) => (
@@ -342,23 +348,34 @@ export default function ProfileScreen() {
               <Text style={styles.location}>No preferences selected</Text>
             )}
           </View>
-          <View style={styles.profilePicContainer}>
-            <Image
-              source={
-                uri
-                  ? { uri: uri }
-                  : require("../../assets/profilepicillustration.jpg")
-              }
-              style={styles.profilePic}
+
+          {/* Badge star */}
+          <Text style={styles.preferencesTitle}>My Badges</Text>
+
+          <View style={styles.star}>
+            <Svg width={80} height={80} viewBox="0 0 100 100">
+              <Polygon
+                points="50,5 61,35 95,35 68,55 78,90 50,70 22,90 32,55 5,35 39,35"
+                fill="#ce9fa7"
+              />
+            </Svg>
+
+            <Ionicons
+              name="pizza-outline"
+              size={28}
+              color="#fffcf2"
+              style={styles.starIcon}
             />
           </View>
-        </View>
+        </ScrollView>
       )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  /* Main screen */
+
   container: {
     flex: 1,
     backgroundColor: "#fffcf2",
@@ -366,67 +383,173 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 
-  header: {
+  /* Profile menu */
+
+  placeMenuButtons: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -40,
+  },
+
+  placeMenuButton: {
+    width: 300,
+    height: 60,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+
+  editPlaceButton: {
+    width: 300,
+    height: 60,
+    backgroundColor: "#ce9fa7",
+    borderWidth: 1,
+    borderColor: "#ce9fa7",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+
+  createButtonText: {
+    color: "#FFFCF2",
+    fontSize: 16,
+    fontWeight: "600",
+  },
+
+  /* Profile page */
+
+  profilePage: {
+    flex: 1,
+    paddingTop: 20,
+  },
+
+  profileContent: {
+    paddingBottom: 40,
+  },
+
+  profileHeader: {
     flexDirection: "row",
     alignItems: "center",
+    marginBottom: 15,
   },
 
   profilePicContainer: {
-    position: "relative",
-    marginRight: 20,
+    marginRight: 25,
   },
 
   profilePic: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 110,
+    height: 110,
+    borderRadius: 55,
   },
 
-  editPhotoButton: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: "#bdcfd3",
-    justifyContent: "center",
-    alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#fffcf2",
-  },
-
-  editPhotoText: {
-    fontSize: 18,
-    color: "#fffcf2",
-    fontWeight: "bold",
-  },
-
-  infoContainer: {
+  profileInfo: {
     flex: 1,
   },
 
-  nameInput: {
-    fontSize: 30,
+  name: {
+    fontSize: 26,
     fontWeight: "bold",
-    borderBottomWidth: 1,
-    borderBottomColor: "#6F6C43",
-    paddingBottom: 5,
-    marginBottom: 10,
+    color: "#6F6C43",
+    marginBottom: 15,
+  },
+
+  statsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+
+  stat: {
+    alignItems: "center",
+    marginRight: 15,
+  },
+
+  statNumber: {
+    fontSize: 18,
+    fontWeight: "bold",
     color: "#6F6C43",
   },
 
-  name: {
-    fontSize: 30,
-    fontWeight: "bold",
+  statLabel: {
+    fontSize: 13,
     color: "#6F6C43",
   },
 
   location: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#6F6C43",
     marginTop: 5,
   },
+
+  /* Edit profile */
+
+  editProfileButton: {
+    width: "100%",
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 15,
+    marginBottom: 25,
+  },
+
+  editProfileButtonText: {
+    color: "#6F6C43",
+    fontSize: 15,
+    fontWeight: "600",
+  },
+
+  /* Preferences */
+
+  preferencesTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#6F6C43",
+    marginBottom: 10,
+  },
+
+  chipsContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+
+  selectedFeatureChip: {
+    backgroundColor: "#6F6C43",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    margin: 4,
+  },
+
+  selectedFeatureText: {
+    color: "#fffcf2",
+  },
+
+  /* Star */
+
+  star: {
+    width: 80,
+    height: 80,
+    marginTop: 1,
+    alignSelf: "flex-start",
+    position: "relative",
+  },
+
+  starIcon: {
+    position: "absolute",
+    top: 26,
+    left: 26,
+  },
+
+  /* Form styles */
 
   pickerContainer: {
     backgroundColor: "#fffcf2",
@@ -441,54 +564,43 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "bold",
     color: "#6F6C43",
-    marginBottom: 10,
-    marginTop: 0,
+    marginBottom: 20,
   },
 
-  chipsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-
-  preferenceChip: {
-    borderWidth: 1,
-    borderColor: "#6F6C43",
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    margin: 4,
-  },
-
-  selectedFeatureChip: {
-    backgroundColor: "#6F6C43",
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    margin: 4,
-  },
-
-  preferenceText: {
-    color: "#6F6C43",
-  },
-
-  selectedFeatureText: {
-    color: "#fffcf2",
-  },
-
-  editprofilebutton: {
-    marginTop: 10,
-    backgroundColor: "#bdcfd3",
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignSelf: "flex-start",
-  },
-
-  buttonText: {
-    color: "#fffcf2",
-    fontWeight: "bold",
+  sectionSubtitle: {
     fontSize: 16,
+    color: "#6F6C43",
+    marginBottom: 20,
   },
+
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: "#bdcfd3",
+    paddingHorizontal: 16,
+    marginBottom: 24,
+
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+
+    elevation: 2,
+  },
+
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    color: "#6F6C43",
+    paddingVertical: 14,
+  },
+
   createButton: {
     width: 300,
     height: 40,
@@ -504,11 +616,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  createButtonText: {
-    color: "#FFFCF2",
-    fontSize: 16,
-    fontWeight: "600",
-  },
+
   cancelButton: {
     width: 90,
     height: 40,
@@ -524,11 +632,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
   cancelButtonText: {
     color: "#FFFCF2",
     fontSize: 16,
     fontWeight: "600",
   },
+
   nextButton: {
     width: 90,
     height: 40,
@@ -549,28 +659,5 @@ const styles = StyleSheet.create({
     color: "#FFFCF2",
     fontSize: 16,
     fontWeight: "600",
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: "#bdcfd3",
-    paddingHorizontal: 16,
-    marginBottom: 24,
-
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 2,
-  },
-
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#6F6C43",
-    paddingVertical: 14,
   },
 });

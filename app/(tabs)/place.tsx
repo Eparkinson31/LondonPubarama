@@ -59,15 +59,20 @@ export default function Place() {
 
       {/* Tracker */}
       {currentPage === "PlaceMenu" && (
-        <View style={styles.container}>
+        <View style={styles.placeMenuButtons}>
+          <Text style={styles.placeMenuTitle}>
+            Add a Third Place You've Visited
+          </Text>
+
           <Pressable
-            style={[styles.createButton]}
+            style={styles.placeMenuButton}
             onPress={() => setCurrentPage("thirdPlaceName")}
           >
             <Text style={styles.createButtonText}>Create new Third Place</Text>
           </Pressable>
+
           <Pressable
-            style={[styles.createButton]}
+            style={styles.editPlaceButton}
             onPress={() => setCurrentPage("thirdPlaceName")}
           >
             <Text style={styles.createButtonText}>Edit Third Place</Text>
@@ -345,5 +350,43 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     overflow: "hidden",
     marginTop: 10,
+  },
+  placeMenuButtons: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: -40,
+  },
+
+  placeMenuButton: {
+    width: 300,
+    height: 60,
+    backgroundColor: "#6F6C43",
+    borderWidth: 1,
+    borderColor: "#6F6C43",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+  placeMenuTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#6F6C43",
+    marginBottom: 5,
+    textAlign: "center",
+    transform: [{ translateY: -50 }],
+  },
+
+  editPlaceButton: {
+    width: 300,
+    height: 60,
+    backgroundColor: "#ce9fa7",
+    borderWidth: 1,
+    borderColor: "#ce9fa7",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 15,
   },
 });

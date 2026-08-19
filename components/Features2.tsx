@@ -316,4 +316,50 @@ const featurestyles = StyleSheet.create({
     borderRadius: 8,
     alignSelf: "flex-start",
   },
+  confirmationContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 30,
+  },
+
+  confirmationCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: "#6F6C43",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 30,
+  },
+
+  confirmationTitle: {
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#6F6C43",
+    textAlign: "center",
+    marginBottom: 15,
+  },
+
+  confirmationText: {
+    fontSize: 16,
+    color: "#6F6C43",
+    textAlign: "center",
+    lineHeight: 24,
+    marginBottom: 40,
+  },
+  confirmationButton: {
+    width: 200,
+    height: 55,
+    backgroundColor: "#ce9fa7",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  confirmationButtonText: {
+    color: "#FFFCF2",
+    fontSize: 17,
+    fontWeight: "600",
+  },
 });

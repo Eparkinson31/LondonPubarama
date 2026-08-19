@@ -79,31 +79,46 @@ export default function ConfirmationScreen() {
 
         <View style={styles.iconsRow}>
           {/* Level 1 */}
-          <View style={styles.circle5}>
+          <View
+            style={styles.circle5}
+            onTouchStart={() =>
+              show("Watch 3 different matches at a third place")
+            }
+          >
             <Ionicons name="football-outline" size={28} color="#fffcf2" />
           </View>
 
           {/* Level 2 */}
-          <View style={styles.circle6}>
+          <View
+            style={styles.circle6}
+            onTouchStart={() =>
+              show("Watch 10 different matches at a third place")
+            }
+          >
             <Ionicons name="football-outline" size={28} color="#fffcf2" />
           </View>
 
           {/* Level 3 */}
-          <View style={styles.circle7}>
+          <View
+            style={styles.circle7}
+            onTouchStart={() =>
+              show("Watch 20 different matches at a third place")
+            }
+          >
             <Ionicons name="football-outline" size={28} color="#fffcf2" />
           </View>
 
           {/* Level 4 */}
-          <View style={styles.circle8}>
+          <View
+            style={styles.circle8}
+            onTouchStart={() =>
+              show("Watch 50 different matches at a third place")
+            }
+          >
             <Ionicons name="football-outline" size={28} color="#fffcf2" />
           </View>
         </View>
 
-        <Text style={styles.badgeDescription}>
-          Watch 3 different matches at third places → Watch 10 matches → Watch
-          20 different third places for sports events → Watch 50 different
-          matches
-        </Text>
         <ProgressBar progress={66} />
         <Text style={styles.badgeDescription}>
           Progress: 66% (2/3 third places)
@@ -116,30 +131,37 @@ export default function ConfirmationScreen() {
 
         <View style={styles.iconsRow}>
           {/* Level 1 */}
-          <View style={styles.circle9}>
+          <View
+            style={styles.circle9}
+            onTouchStart={() => show("Attend 3 third place events")}
+          >
             <Ionicons name="ticket-outline" size={28} color="#fffcf2" />
           </View>
 
           {/* Level 2 */}
-          <View style={styles.circle10}>
+          <View
+            style={styles.circle10}
+            onTouchStart={() => show("Attend 10 third place events")}
+          >
             <Ionicons name="ticket-outline" size={28} color="#fffcf2" />
           </View>
 
           {/* Level 3 */}
-          <View style={styles.circle11}>
+          <View
+            style={styles.circle11}
+            onTouchStart={() => show("Attend 20 third place events")}
+          >
             <Ionicons name="ticket-outline" size={28} color="#fffcf2" />
           </View>
 
           {/* Level 4 */}
-          <View style={styles.circle12}>
+          <View
+            style={styles.circle12}
+            onTouchStart={() => show("Attend 50 third place events")}
+          >
             <Ionicons name="ticket-outline" size={28} color="#fffcf2" />
           </View>
         </View>
-
-        <Text style={styles.badgeDescription}>
-          Attend 3 third place events → Attend 10 third place events → Attend 20
-          different third place events → Attend 50 different third place events
-        </Text>
         <ProgressBar progress={33} />
         <Text style={styles.badgeDescription}>
           Progress: 33% (1/3 third places)
@@ -148,7 +170,7 @@ export default function ConfirmationScreen() {
 
       {/* Footer */}
       <Text style={styles.footer}>
-        Complete all four badges to become a London third place expert!
+        Complete all badges to become a London third place expert!
       </Text>
     </View>
   );
@@ -329,7 +351,6 @@ const styles = StyleSheet.create({
   footer: {
     color: "#6F6C43",
     fontSize: 12,
-    fontWeight: "bold",
     textAlign: "center",
     marginTop: 10,
   },
